@@ -1,6 +1,6 @@
 # Diary Fit
 
-O Diary Fit consiste em uma plataforma para auxiliar personal trainers e nutricionistas no acompanhamento da evolução física e alimentar de seus clientes. O sistema permite que os usuários registrem diariamente suas refeições, exercícios praticados, tempo gasto em atividades físicas e peso corporal. Com esses dados, os profissionais podem analisar a evolução do cliente, sugerir ajustes personalizados e acompanhar o progresso de maneira eficiente. A plataforma oferece ferramentas de visualização de dados e relatórios detalhados para embasar as decisões dos profissionais de saúde.
+O Diary Fit consiste em uma plataforma para auxiliar personal trainers e nutricionistas no acompanhamento da evolução física e alimentar de seus clientes. O sistema permite que os usuários registrem diariamente suas refeições, exercícios praticados, tempo gasto em atividades físicas e peso corporal. Com esses dados, os profissionais podem analisar a evolução do cliente, sugerir ajustes personalizados e acompanhar o progresso de maneira eficiente. A plataforma oferece ferramentas intuitivas para preenchimento dos dados pelo cliente e relatórios detalhados para embasar as decisões dos profissionais de saúde.
 
 Funcionalidades
 - Registro diário: o usuário insere no calendário os alimentos consumidos, exercícios realizados e peso corporal;
