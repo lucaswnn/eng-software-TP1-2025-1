@@ -16,6 +16,6 @@ Lucas Wiermann Cobo da Silva: Full Stack.
 
 Tecnologias Utilizadas
 - Frontend: Flutter;
-- Backend: Node.js (Express);
+- Backend: Django;
 - Banco de Dados: Supabase (PostgreSQL);
 - Hospedagem: Firebase Hosting.
