@@ -12,7 +12,8 @@ Funcionalidades
 Membros da Equipe
 Haniel Botelho Ribeiro: Full Stack;
 Lucas Ferreria Pedras: Full Stack e Project Owner;
-Lucas Wiermann Cobo da Silva: Full Stack.
+Lucas Wiermann Cobo da Silva: Full Stack;
+Mateus Amaral da Silva: Full Stack.
 
 Tecnologias Utilizadas
 - Frontend: Flutter;
