@@ -20,8 +20,10 @@ CREATE TABLE Personal(
 
 CREATE TABLE Dados_do_Usuario(
 	dia date PRIMARY KEY,
+	e_mail_usuario varchar(50) PRIMARY KEY,
 	peso decimal,
-		
+	
+	FOREIGN KEY (e_mail_usuario) REFERENCES usuario(e_mail) PRIMARY KEY,
 );
 
 CREATE TABLE Ficha_Nutricional(
