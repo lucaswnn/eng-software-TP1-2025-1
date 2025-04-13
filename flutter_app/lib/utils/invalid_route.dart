@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/values/app_strings.dart';
+import 'package:diary_fit/values/app_strings.dart';
 
 
 class InvalidRoute extends StatelessWidget {

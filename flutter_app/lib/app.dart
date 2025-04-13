@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/routes.dart';
-import 'package:flutter_app/utils/navigation_helper.dart';
-import 'package:flutter_app/values/app_routes.dart';
+import 'package:diary_fit/routes.dart';
+import 'package:diary_fit/utils/navigation_helper.dart';
+import 'package:diary_fit/values/app_routes.dart';
 
 class MyApp extends StatelessWidget{
   const MyApp({super.key});

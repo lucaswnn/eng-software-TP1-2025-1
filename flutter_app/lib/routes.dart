@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/login_screen.dart';
-import 'package:flutter_app/utils/invalid_route.dart';
-import 'package:flutter_app/values/app_routes.dart';
+import 'package:diary_fit/screens/home_screen.dart';
+import 'package:diary_fit/screens/login_screen.dart';
+import 'package:diary_fit/utils/invalid_route.dart';
+import 'package:diary_fit/values/app_routes.dart';
 
 class Routes {
   const Routes._();
@@ -21,6 +22,9 @@ class Routes {
     switch (settings.name) {
       case AppRoutes.login:
         return getRoute(widget: const LoginScreen());
+
+      case AppRoutes.home:
+        return getRoute(widget: const HomeScreen());
 
       default:
         return getRoute(widget: const InvalidRoute());
