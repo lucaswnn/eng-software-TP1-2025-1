@@ -5,3 +5,8 @@ __pycache__/
 db.sqlite3
 .env
 *.log
+
+# Configurações de editor e sistema
+.vscode/
+.idea/
+.DS_Store
