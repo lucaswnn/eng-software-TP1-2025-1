@@ -1,3 +1,4 @@
+import 'package:diary_fit/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:diary_fit/screens/home_screen.dart';
 import 'package:diary_fit/screens/login_screen.dart';
@@ -25,6 +26,9 @@ class Routes {
 
       case AppRoutes.home:
         return getRoute(widget: const HomeScreen());
+
+      case AppRoutes.register:
+        return getRoute(widget: const RegisterScreen());
 
       default:
         return getRoute(widget: const InvalidRoute());

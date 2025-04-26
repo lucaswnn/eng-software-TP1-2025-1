@@ -27,34 +27,22 @@ class LoginScreenWeb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blue,
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 300,
-                maxHeight: 500,
-              ),
-              child: const Card(
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Diary Fit',
-                        style: TextStyle(fontSize: 30),
-                      ),
-                      SizedBox(height: 20),
-                      LoginForm()
-                    ],
-                  ),
-                ),
-              ),
+      backgroundColor: Colors.blue,
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              maxWidth: 300,
+              maxHeight: 500,
+            ),
+            child: const Card(
+              child: CommonLoginContent(),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -64,26 +52,33 @@ class LoginScreenMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-        backgroundColor: Colors.white,
-        body: Padding(
-          padding: EdgeInsets.all(20),
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Diary Fit',
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  SizedBox(height: 20),
-                  LoginForm(),
-                ],
-              ),
-            ),
-          ),
-        ));
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: CommonLoginContent(),
+        ),
+      ),
+    );
+  }
+}
+
+class CommonLoginContent extends StatelessWidget {
+  const CommonLoginContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(AppStrings.appName, style: TextStyle(fontSize: 30)),
+          SizedBox(height: 20),
+          LoginForm(),
+        ],
+      ),
+    );
   }
 }
 
@@ -120,11 +115,11 @@ class _LoginFormState extends State<LoginForm> {
             controller: _emailController,
             decoration: const InputDecoration(
               icon: Icon(Icons.person),
-              labelText: 'E-mail',
+              labelText: AppStrings.loginLabel,
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Por favor, insira um e-mail válido.';
+                return AppStrings.invalidLoginMessage;
               }
               return null;
             },
@@ -135,20 +130,19 @@ class _LoginFormState extends State<LoginForm> {
             obscureText: true,
             decoration: const InputDecoration(
               icon: Icon(Icons.lock),
-              labelText: 'Senha',
+              labelText: AppStrings.passwordLabel,
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Por favor, insira a senha.';
+                return AppStrings.invalidPasswordMessage;
               }
               return null;
             },
           ),
           const SizedBox(height: 5),
           TextButton(
-            onPressed: () =>
-                NavigationHelper.pushReplacementNamed(AppRoutes.register),
-            child: const Text('Novo por aqui? Cadastre-se!'),
+            onPressed: () => NavigationHelper.pushNamed(AppRoutes.register),
+            child: const Text(AppStrings.registerButton),
           ),
           const SizedBox(height: 30),
           if (isAuthLoading)
@@ -165,11 +159,12 @@ class _LoginFormState extends State<LoginForm> {
                     if (authState.isAuthenticated) {
                       NavigationHelper.pushReplacementNamed(AppRoutes.home);
                     } else {
-                      SnackbarHelper.showSnackBar(AppStrings.loginServerError);
+                      SnackbarHelper.showSnackBar(
+                          '${AppStrings.genericServerError}\n${authState.errorMessage}');
                     }
                   }
                 },
-                child: const Text('Entrar')),
+                child: const Text(AppStrings.loginButton)),
         ],
       ),
     );

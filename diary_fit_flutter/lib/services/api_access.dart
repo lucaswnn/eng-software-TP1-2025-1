@@ -5,6 +5,12 @@ import 'package:diary_fit/services/client_auth.dart';
 import 'package:diary_fit/values/app_api_requests.dart';
 import 'package:http/http.dart' as http;
 
+const Map<ClientType, String> clientTypeApiMap = {
+  ClientType.trainer: 'educador_fisico',
+  ClientType.nutritionist: 'nutricionista',
+  ClientType.patient: 'paciente',
+};
+
 class ApiAccess {
   ApiAccess._(); // Private constructor to prevent instantiation
 
@@ -22,7 +28,7 @@ class ApiAccess {
             'password': password,
           }),
         )
-        .timeout(const Duration(seconds: 5));
+        .timeout(const Duration(seconds: 20));
 
     switch (response.statusCode) {
       case 200:
@@ -37,14 +43,40 @@ class ApiAccess {
               refreshToken: refreshToken,
               clientType: ClientType.nutritionist);
         }
-        case 400:
+      case 400:
         {
           throw Exception('Invalid username or password');
         }
-        default:
+      default:
         {
           throw Exception('Failed to login: ${response.statusCode}');
         }
+    }
+  }
+
+  static Future<void> register(
+    String username,
+    String password,
+    ClientType clientType,
+  ) async {
+    final url = Uri.parse(AppApiRequests.register);
+
+    final response = await http
+        .post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: json.encode({
+            'username': username,
+            'password': password,
+            'tipo': clientTypeApiMap[clientType],
+          }),
+        )
+        .timeout(const Duration(seconds: 20));
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to register: ${response.statusCode}');
     }
   }
 }

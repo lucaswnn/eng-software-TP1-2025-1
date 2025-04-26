@@ -3,7 +3,7 @@ class AppApiRequests {
 
   static const String baseUrl = 'http://127.0.0.1:8000';
   static const String login = '$baseUrl/api/token/';
-  static const String register = '$baseUrl/register';
+  static const String register = '$baseUrl/api/signup/';
   static const String getUserProfile = '$baseUrl/user/profile';
   static const String updateUserProfile = '$baseUrl/user/update';
   static const String getDiaryEntries = '$baseUrl/diary/entries';

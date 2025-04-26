@@ -8,8 +8,12 @@ class AuthProvider with ChangeNotifier {
   ClientType? _clientType;
   final String _clientName = 'fulano';
   bool _isLoading = false;
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
+
+  String? _loginErrorMessage;
+  String? get errorMessage => _loginErrorMessage;
+
+  String? _registerErrorMessage;
+  String? get registerErrorMessage => _registerErrorMessage;
 
   bool get isLoading => _isLoading;
   bool get isAuthenticated => _accessToken != null;
@@ -23,7 +27,24 @@ class AuthProvider with ChangeNotifier {
       _accessToken = clientAuth.accessToken;
       _clientType = clientAuth.clientType;
     } catch (e) {
-      _errorMessage = e.toString();
+      _loginErrorMessage = e.toString();
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> register(
+    String username,
+    String password,
+    ClientType clientType,
+  ) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      await ApiAccess.register(username, password, clientType);
+    } catch (e) {
+      _registerErrorMessage = e.toString();
     }
 
     _isLoading = false;
