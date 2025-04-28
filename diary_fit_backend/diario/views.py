@@ -2,6 +2,11 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from collections import defaultdict
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import MyTokenObtainPairSerializer
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 from .models import Perfil, Peso, Refeicao, Exercicio
 from .serializers import (
@@ -59,16 +64,33 @@ class RefeicaoViewSet(viewsets.ModelViewSet):
 
 
 class ExercicioViewSet(viewsets.ModelViewSet):
-    queryset = Exercicio.objects.all()
+    """
+    Se for paciente, lista/exibe só os exercícios que o próprio paciente fez.
+    Se for educador físico, lista/exibe só os exercícios que ele criou (treinador).
+    """
     serializer_class = ExercicioSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Exercicio.objects.filter(usuario=self.request.user)
+        user = self.request.user
+        tp = user.perfil.tipo
+        if tp == 'paciente':
+            # registros feitos pelo próprio paciente
+            return Exercicio.objects.filter(usuario=user)
+        elif tp == 'educador_fisico':
+            # registros criados por este treinador
+            return Exercicio.objects.filter(treinador=user)
+        return Exercicio.objects.none()
 
     def perform_create(self, serializer):
-        serializer.save(usuario=self.request.user)
-
+        user = self.request.user
+        if user.perfil.tipo == 'paciente':
+            # paciente registra o próprio exercício
+            serializer.save(usuario=user)
+        else:
+            # educador físico registra exercício para um paciente
+            # precisa passar "usuario" no JSON para indicar o cliente
+            serializer.save(treinador=user)
 
 # ——————————
 # Calendário Diário
@@ -125,15 +147,21 @@ class AlimentoViewSet(viewsets.ModelViewSet):
 
 class CardapioViewSet(viewsets.ModelViewSet):
     """
-    CRUD de Cardápios – ligados a pacientes.
+    Se for paciente, lista só os cardápios destinados a ele.
+    Se for nutricionista, lista só os cardápios que ele criou.
     """
-    queryset = Cardapio.objects.all()
     serializer_class = CardapioSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        # nutricionista vê todos; paciente só vê o próprio
-        if user.perfil.tipo == 'paciente':
+        tp = user.perfil.tipo
+        if tp == 'paciente':
             return Cardapio.objects.filter(paciente=user)
-        return super().get_queryset()
+        elif tp == 'nutricionista':
+            return Cardapio.objects.filter(nutricionista=user)
+        return Cardapio.objects.none()
+
+    def perform_create(self, serializer):
+        # somente nutricionista cria cardápio
+        serializer.save(nutricionista=self.request.user)

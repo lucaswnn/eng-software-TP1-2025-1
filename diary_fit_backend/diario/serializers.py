@@ -19,9 +19,28 @@ class RefeicaoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ExercicioSerializer(serializers.ModelSerializer):
+    # mostra o nome de usuário do cliente
+    usuario_username = serializers.CharField(
+        source='usuario.username', read_only=True
+    )
+    # mostra o nome de usuário do treinador (se houver)
+    treinador_username = serializers.CharField(
+        source='treinador.username', read_only=True
+    )
+
     class Meta:
         model = Exercicio
-        fields = '__all__'
+        fields = [
+            'id',
+            'usuario',             # FK para usuário que fez
+            'usuario_username',    # username do usuário que fez
+            'treinador',           # FK para educador_fisico que criou
+            'treinador_username',  # username do treinador
+            'data',
+            'tipo',
+            'duracao_minutos',
+        ]
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -64,3 +83,12 @@ class CardapioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cardapio
         fields = ['id', 'paciente', 'alimentos', 'data_inicio', 'data_fim']
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        # adiciona o tipo de usuário na resposta
+        data['tipo'] = self.user.perfil.tipo
+        return data

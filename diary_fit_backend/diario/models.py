@@ -30,14 +30,23 @@ class Refeicao(models.Model):
         return f"{self.usuario.username} – {self.data} – Refeição"
 
 class Exercicio(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='exercicios_feitos'
+    )
+    treinador = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True, blank=True,
+        limit_choices_to={'perfil__tipo': 'educador_fisico'},
+        related_name='exercicios_criados'
+    )
     data = models.DateField()
     tipo = models.CharField(max_length=100)
     duracao_minutos = models.IntegerField()
 
     def __str__(self):
-        return f"{self.usuario.username} – {self.data} – {self.tipo} ({self.duracao_minutos} min)"
-
+        return f"{self.tipo} por {self.usuario.username}"
 
 class Anamnese(models.Model):
     usuario = models.OneToOneField(
@@ -67,14 +76,20 @@ class Cardapio(models.Model):
         User,
         on_delete=models.CASCADE,
         limit_choices_to={'perfil__tipo': 'paciente'},
-        help_text="Paciente que receberá este cardápio"
+        related_name='cardapios_paciente'
     )
-    alimentos = models.ManyToManyField(
-        Alimento,
-        help_text="Itens que compõem o cardápio"
+    nutricionista = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        limit_choices_to={'perfil__tipo': 'nutricionista'},
+        related_name='cardapios_nutricionista'
+    )
+    descricao = models.TextField(
+        default='Sem descrição',
+        help_text="Descrição do cardápio"
     )
     data_inicio = models.DateField()
-    data_fim = models.DateField()
+    data_fim    = models.DateField()
 
     def __str__(self):
-        return f"Cardápio de {self.paciente.username} de {self.data_inicio} a {self.data_fim}"
+        return f"Cardápio {self.id} de {self.paciente.username}"
