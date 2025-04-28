@@ -93,3 +93,31 @@ class Cardapio(models.Model):
 
     def __str__(self):
         return f"Cardápio {self.id} de {self.paciente.username}"
+
+class VinculoProfissionalPaciente(models.Model):
+    PROFISSIONAL_TIPOS = [
+        ('nutricionista', 'Nutricionista'),
+        ('educador_fisico', 'Educador Físico'),
+    ]
+
+    profissional = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        limit_choices_to={'perfil__tipo__in': ['nutricionista', 'educador_fisico']},
+        related_name='vinculos_profissional'
+    )
+    paciente = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        limit_choices_to={'perfil__tipo': 'paciente'},
+        related_name='vinculos_paciente'
+    )
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('profissional', 'paciente')
+        verbose_name = 'Vínculo Profissional–Paciente'
+        verbose_name_plural = 'Vínculos Profissional–Paciente'
+
+    def __str__(self):
+        return f"{self.profissional.username} ↔ {self.paciente.username}"

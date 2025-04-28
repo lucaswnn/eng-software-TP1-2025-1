@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from collections import defaultdict
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import MyTokenObtainPairSerializer
+from .models import VinculoProfissionalPaciente
+from .serializers import VinculoSerializer
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -165,3 +167,25 @@ class CardapioViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # somente nutricionista cria cardápio
         serializer.save(nutricionista=self.request.user)
+
+
+class VinculoViewSet(viewsets.ModelViewSet):
+    """
+    Nutricionista/Educador vê só seus vínculos.
+    Paciente vê só os seus.
+    """
+    serializer_class = VinculoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        tp = user.perfil.tipo
+        if tp in ['nutricionista', 'educador_fisico']:
+            return VinculoProfissionalPaciente.objects.filter(profissional=user)
+        if tp == 'paciente':
+            return VinculoProfissionalPaciente.objects.filter(paciente=user)
+        return VinculoProfissionalPaciente.objects.none()
+
+    def perform_create(self, serializer):
+        # só profissionais podem criar
+        serializer.save(profissional=self.request.user)

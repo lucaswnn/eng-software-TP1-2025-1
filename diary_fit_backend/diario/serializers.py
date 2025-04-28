@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Perfil, Peso, Refeicao, Exercicio, Anamnese,Alimento, Cardapio
+from .models import Perfil, Peso, Refeicao, Exercicio, Anamnese,Alimento, Cardapio, VinculoProfissionalPaciente
 
 
 class PerfilSerializer(serializers.ModelSerializer):
@@ -92,3 +92,22 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # adiciona o tipo de usuário na resposta
         data['tipo'] = self.user.perfil.tipo
         return data
+
+class VinculoSerializer(serializers.ModelSerializer):
+    profissional_username = serializers.CharField(
+        source='profissional.username', read_only=True
+    )
+    paciente_username = serializers.CharField(
+        source='paciente.username', read_only=True
+    )
+
+    class Meta:
+        model = VinculoProfissionalPaciente
+        fields = [
+            'id',
+            'profissional',
+            'profissional_username',
+            'paciente',
+            'paciente_username',
+            'criado_em',
+        ]
