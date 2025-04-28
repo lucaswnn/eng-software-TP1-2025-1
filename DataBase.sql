@@ -32,6 +32,9 @@ CREATE TABLE IF NOT EXISTS Dados_do_Usuario(
 	e_mail_usuario varchar(50),
 	peso decimal,
 	percentual_gordura decimal,
+	indice_massa_magra decimal,
+	relacao_cintura_quadril decimal,
+	percentual_agua decimal,
 
 	PRIMARY KEY (dia, e_mail_usuario),
 	FOREIGN KEY (e_mail_usuario) REFERENCES usuario(e_mail_usuario)
