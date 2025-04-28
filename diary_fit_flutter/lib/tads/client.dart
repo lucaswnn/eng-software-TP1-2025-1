@@ -1,4 +1,6 @@
-class Client {
+enum ClientType { trainer, nutritionist, patient, unknown }
+
+abstract class Client {
   final String name;
   final int id;
   const Client({required this.name, required this.id});

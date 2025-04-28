@@ -159,8 +159,7 @@ class _LoginFormState extends State<LoginForm> {
                     if (authState.isAuthenticated) {
                       NavigationHelper.pushReplacementNamed(AppRoutes.home);
                     } else {
-                      SnackbarHelper.showSnackBar(
-                          '${AppStrings.genericServerError}\n${authState.errorMessage}');
+                      SnackbarHelper.showSnackBar(authState.errorMessage);
                     }
                   }
                 },

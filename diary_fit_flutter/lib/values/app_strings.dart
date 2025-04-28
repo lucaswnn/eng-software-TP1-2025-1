@@ -1,4 +1,4 @@
-import 'package:diary_fit/services/client_auth.dart';
+import 'package:diary_fit/tads/client.dart';
 
 class AppStrings {
   const AppStrings._();
@@ -19,6 +19,12 @@ class AppStrings {
 
   static const String pageNotFoundError = 'ops...\nPágina não encontrada';
 
+  static const String loginAlreadyExistsError =
+      'Ops... já existe um usuário com esse nome\nTente outro nome de usuário';
+
+  static const String wrongLoginOrPasswordError =
+      'Ops... usuário ou senha inválidos\nTente novamente';
+
   static const String genericServerError =
       'Ops... parece que o servidor está fora do ar\nTente novamente mais tarde';
 
@@ -36,4 +42,8 @@ class AppStrings {
 
   static String get nutritionistLabel =>
       _clientTypeMap[ClientType.nutritionist]!;
+
+      static const String badRequestExceptionMessage = 'failed to fetch data: 400';
+  static const String unauthorizedExceptionMessage = 'unauthorized to fetch data: 401';
+  static const String nullTokenExceptionMessage = 'null jwt token';
 }

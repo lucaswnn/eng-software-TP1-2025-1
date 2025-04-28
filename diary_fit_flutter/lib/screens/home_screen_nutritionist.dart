@@ -1,5 +1,5 @@
 import 'package:diary_fit/screens/home_screen_content_interface.dart';
-import 'package:diary_fit/services/client_auth.dart';
+import 'package:diary_fit/tads/client.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenNutritionist extends HomeScreenContentInterface {
@@ -11,23 +11,24 @@ class HomeScreenNutritionist extends HomeScreenContentInterface {
   @override
   String get title => 'Nutritionist Home';
 
-  final List<NavigationRailDestination> _destinations = const [
-    NavigationRailDestination(
-      icon: Icon(Icons.food_bank),
-      label: Text('Nutrition'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.fitness_center),
-      label: Text('Fitness'),
-    ),
-  ];
+  final _mainPageDestination = const NavigationRailDestination(
+    icon: Icon(Icons.food_bank),
+    label: Text('Nutrition'),
+  );
 
-  final List<Widget> _contents = const [
-    Expanded(child: Center(child: Text('Nutrition Content'))),
-    Expanded(child: Center(child: Text('Fitness Content'))),
-  ];
+  final _clientStatisticsDestination = const NavigationRailDestination(
+    icon: Icon(Icons.fitness_center),
+    label: Text('Fitness'),
+  );
+
+  final _mainPage = const Expanded(
+      child: Align(alignment: Alignment.topRight, child: Text('Nutritionist')));
+
+  final _clientStatistics = const Text('teste');
 
   @override
-  Map<NavigationRailDestination, Widget> get contents =>
-      Map.fromIterables(_destinations, _contents);
+  Map<NavigationRailDestination, Widget> get contents => {
+        _mainPageDestination: _mainPage,
+        _clientStatisticsDestination: _clientStatistics,
+      };
 }

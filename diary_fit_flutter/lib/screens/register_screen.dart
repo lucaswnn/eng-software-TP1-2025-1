@@ -1,5 +1,5 @@
 import 'package:diary_fit/services/auth_provider.dart';
-import 'package:diary_fit/services/client_auth.dart';
+import 'package:diary_fit/tads/client.dart';
 import 'package:diary_fit/utils/snackbar_helper.dart';
 import 'package:diary_fit/values/app_strings.dart';
 import 'package:flutter/material.dart';
@@ -216,8 +216,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       SnackbarHelper.showSnackBar(message);
                       NavigationHelper.pop();
                     } else {
-                      message = AppStrings.genericServerError;
-                      SnackbarHelper.showSnackBar('$message\n${authState.registerErrorMessage}');
+                      SnackbarHelper.showSnackBar(message);
                     }
                   }
                 },

@@ -1,5 +1,5 @@
 import 'package:diary_fit/screens/home_screen_content_interface.dart';
-import 'package:diary_fit/services/client_auth.dart';
+import 'package:diary_fit/tads/client.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenTrainer extends HomeScreenContentInterface {

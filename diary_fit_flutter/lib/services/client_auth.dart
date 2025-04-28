@@ -1,4 +1,4 @@
-enum ClientType { trainer, nutritionist, patient, unknown }
+import 'package:diary_fit/tads/client.dart';
 
 class ClientAuth {
   final String name;

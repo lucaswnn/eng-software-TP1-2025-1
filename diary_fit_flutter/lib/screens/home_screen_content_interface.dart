@@ -1,4 +1,4 @@
-import 'package:diary_fit/services/client_auth.dart';
+import 'package:diary_fit/tads/client.dart';
 import 'package:flutter/material.dart';
 
 abstract class HomeScreenContentInterface extends StatefulWidget {

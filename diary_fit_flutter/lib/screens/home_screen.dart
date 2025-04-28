@@ -3,7 +3,7 @@ import 'package:diary_fit/screens/home_screen_nutritionist.dart';
 import 'package:diary_fit/screens/home_screen_patient.dart';
 import 'package:diary_fit/screens/home_screen_trainer.dart';
 import 'package:diary_fit/services/auth_provider.dart';
-import 'package:diary_fit/services/client_auth.dart';
+import 'package:diary_fit/tads/client.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
         body = HomeScreenPatient();
         break;
       default:
-        throw Exception('Unknown client type');
+        throw Exception('asdasdasdad');
     }
 
     final title = body.title;
