@@ -45,5 +45,7 @@ class AppStrings {
 
       static const String badRequestExceptionMessage = 'failed to fetch data: 400';
   static const String unauthorizedExceptionMessage = 'unauthorized to fetch data: 401';
+  static const String forbiddenExceptionMessage = 'forbidden to fetch data: 403';
+  static const String notFoundExceptionMessage = 'something was not found: 404';
   static const String nullTokenExceptionMessage = 'null jwt token';
 }

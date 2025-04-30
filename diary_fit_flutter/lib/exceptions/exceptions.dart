@@ -23,4 +23,22 @@ class UnauthorizedException implements Exception {
 
   @override
   String toString() => 'UnauthorizedException: $message';
-} 
+}
+
+class ForbiddenException implements Exception {
+  final String message;
+
+  ForbiddenException(this.message);
+
+  @override
+  String toString() => 'ForbiddenException: $message';
+}
+
+class NotFoundException implements Exception {
+  final String message;
+
+  NotFoundException(this.message);
+
+  @override
+  String toString() => 'NotFoundException: $message';
+}

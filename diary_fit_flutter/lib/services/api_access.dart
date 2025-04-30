@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:diary_fit/exceptions/exceptions.dart';
 import 'package:diary_fit/services/client_auth.dart';
 import 'package:diary_fit/tads/client.dart';
-import 'package:diary_fit/values/app_api_requests.dart';
+import 'package:diary_fit/values/app_api_routes.dart';
 import 'package:diary_fit/values/app_strings.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,12 +13,6 @@ const Map<ClientType, String> clientTypeApiMap = {
   ClientType.nutritionist: 'nutricionista',
   ClientType.patient: 'paciente',
 };
-
-// p1
-// p2
-// p3
-// t1
-// n1
 
 class ApiAccess {
   ApiAccess._();
@@ -86,13 +80,17 @@ class ApiAccess {
         throw BadRequestException(AppStrings.badRequestExceptionMessage);
       case 401:
         throw UnauthorizedException(AppStrings.unauthorizedExceptionMessage);
+      case 403:
+        throw ForbiddenException(AppStrings.forbiddenExceptionMessage);
+      case 404:
+        throw NotFoundException(AppStrings.notFoundExceptionMessage);
       default:
         throw Exception('$unknownExceptionMessage: ${response.statusCode}');
     }
   }
 
   static Future<ClientAuth> login(String username, String password) async {
-    final url = Uri.parse(AppApiRequests.login);
+    final url = Uri.parse(AppApiRoutes.login);
 
     final response = await http
         .post(
@@ -111,8 +109,8 @@ class ApiAccess {
       case 200:
         {
           final data = json.decode(response.body);
-          final accessToken = data[AppApiRequests.backendAccessToken];
-          final refreshToken = data[AppApiRequests.backendRefreshToken];
+          final accessToken = data[AppApiRoutes.backendAccessToken];
+          final refreshToken = data[AppApiRoutes.backendRefreshToken];
 
           return ClientAuth(
               name: username,
@@ -136,7 +134,7 @@ class ApiAccess {
     String password,
     ClientType clientType,
   ) async {
-    final url = Uri.parse(AppApiRequests.register);
+    final url = Uri.parse(AppApiRoutes.register);
 
     final response = await http
         .post(
@@ -165,19 +163,21 @@ class ApiAccess {
   static Future<void> getCalendarData(String? authToken) async {
     await _genericGetWithAuth(
       authToken: authToken,
-      url: AppApiRequests.calendarData,
+      url: AppApiRoutes.calendarData,
       unknownExceptionMessage: 'Failed to fetch calendar data',
     );
   }
 
+  // funciona
   static Future<void> getWeightData(String? authToken) async {
     await _genericGetWithAuth(
       authToken: authToken,
-      url: AppApiRequests.weightData,
+      url: AppApiRoutes.weightData,
       unknownExceptionMessage: 'Failed to fetch weight data',
     );
   }
 
+  // funciona
   static Future<void> postWeightData(
     String? authToken,
     double weight,
@@ -190,87 +190,191 @@ class ApiAccess {
 
     await _genericPostWithAuth(
       authToken: authToken,
-      url: AppApiRequests.weightData,
+      url: AppApiRoutes.weightData,
       body: body,
       unknownExceptionMessage: 'Failed to post weight data',
     );
   }
 
+  // funciona
   static Future<void> getMealData(String? authToken) async {
     await _genericGetWithAuth(
       authToken: authToken,
-      url: AppApiRequests.mealData,
+      url: AppApiRoutes.mealData,
       unknownExceptionMessage: 'Failed to fetch meal data',
     );
   }
 
+  // funciona
   static Future<void> postMealData(
     String? authToken,
     String description,
     DateTime date,
   ) async {
     final body = {
-      'descricao': description,
+      'descricao': 'xtudo',
       'data': _dateTimeStringFormat(date),
+      'nutricionista_username': 'n1',
     };
 
     await _genericPostWithAuth(
       authToken: authToken,
-      url: AppApiRequests.mealData,
+      url: AppApiRoutes.mealData,
       body: body,
       unknownExceptionMessage: 'Failed to post meal data',
     );
   }
 
+  // funciona
   static Future<void> getExerciseData(String? authToken) async {
     await _genericGetWithAuth(
       authToken: authToken,
-      url: AppApiRequests.exerciseData,
+      url: AppApiRoutes.exerciseData,
       unknownExceptionMessage: 'Failed to fetch exercise data',
     );
   }
 
+  // funciona
   static Future<void> postExerciseData(
     String? authToken,
+    String trainer,
     String description,
     DateTime date,
-    int minutesDuration,
   ) async {
     final body = {
       'data': _dateTimeStringFormat(date),
-      'tipo': description,
-      'duracao_minutos': minutesDuration,
+      'treinador_username': trainer,
+      'descricao': description,
     };
 
     await _genericPostWithAuth(
       authToken: authToken,
-      url: AppApiRequests.exerciseData,
+      url: AppApiRoutes.exerciseData,
       body: body,
       unknownExceptionMessage: 'Failed to post exercise data',
     );
   }
 
+  // funciona
   static Future<void> getAnamnesisData(String? authToken) async {
     await _genericGetWithAuth(
       authToken: authToken,
-      url: AppApiRequests.anamnesisData,
+      url: AppApiRoutes.anamnesisData,
       unknownExceptionMessage: 'Failed to fetch anamnesis data',
     );
   }
 
-  static Future<void> getFoodData(String? authToken) async {
-    await _genericGetWithAuth(
+  // funciona
+  static Future<void> postAnamnesisData(
+    String? authToken,
+    int age,
+    double height,
+    double initialWeight,
+    String allergies,
+    String goal,
+  ) async {
+    final body = {
+      'idade': age,
+      'altura_cm': height,
+      'peso_inicial': initialWeight,
+      'alergias': allergies,
+      'objetivo': goal,
+    };
+    await _genericPostWithAuth(
       authToken: authToken,
-      url: AppApiRequests.foodData,
-      unknownExceptionMessage: 'Failed to fetch food data',
+      url: AppApiRoutes.anamnesisData,
+      body: body,
+      unknownExceptionMessage: 'Failed to fetch anamnesis data',
     );
   }
 
+  // funciona
   static Future<void> getFoodMenudata(String? authToken) async {
     await _genericGetWithAuth(
       authToken: authToken,
-      url: AppApiRequests.foodMenuData,
+      url: AppApiRoutes.foodMenuData,
       unknownExceptionMessage: 'Failed to fetch food menu data',
+    );
+  }
+
+  // funciona
+  static Future<void> postFoodMenuData(
+    String? authToken,
+    String user,
+    String description,
+    DateTime start,
+    DateTime end,
+  ) async {
+    final body = {
+      'paciente_username': user,
+      'description': description,
+      'data_inicio': _dateTimeStringFormat(start),
+      'data_fim': _dateTimeStringFormat(end),
+    };
+
+    await _genericPostWithAuth(
+      authToken: authToken,
+      url: AppApiRoutes.foodMenuData,
+      body: body,
+      unknownExceptionMessage: 'Failed to post food menu data',
+    );
+  }
+
+  // funciona
+  static Future<void> getRelationshipData(String? authToken) async {
+    await _genericGetWithAuth(
+      authToken: authToken,
+      url: AppApiRoutes.relationshipData,
+      unknownExceptionMessage: 'Failed to fetch relationship data',
+    );
+  }
+
+  // funciona
+  static Future<void> postRelationshipData(
+    String? authToken,
+    String user,
+  ) async {
+    final body = {
+      'paciente_username_input': user,
+    };
+
+    await _genericPostWithAuth(
+      authToken: authToken,
+      url: AppApiRoutes.relationshipData,
+      body: body,
+      unknownExceptionMessage: 'Failed to post relationship data',
+    );
+  }
+
+  // funciona
+  static Future<void> getWorkoutSheetData(String? authToken) async {
+    await _genericGetWithAuth(
+      authToken: authToken,
+      url: AppApiRoutes.workoutSheetData,
+      unknownExceptionMessage: 'Failed to fetch workout sheet data',
+    );
+  }
+
+  // funciona
+  static Future<void> postWorkoutSheetData(
+    String? authToken,
+    String user,
+    String description,
+    DateTime start,
+    DateTime end,
+  ) async {
+    final body = {
+      'usuario_username': user,
+      'descricao': description,
+      'data_inicio': _dateTimeStringFormat(start),
+      'data_fim': _dateTimeStringFormat(end),
+    };
+
+    await _genericPostWithAuth(
+      authToken: authToken,
+      url: AppApiRoutes.workoutSheetData,
+      body: body,
+      unknownExceptionMessage: 'Failed to post workout sheet data',
     );
   }
 

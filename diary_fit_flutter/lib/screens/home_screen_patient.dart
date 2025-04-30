@@ -1,15 +1,12 @@
 import 'package:diary_fit/screens/home_screen_content_interface.dart';
-import 'package:diary_fit/services/api_access.dart';
-import 'package:diary_fit/services/auth_provider.dart';
 import 'package:diary_fit/tads/client.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:diary_fit/utils/table_calendar_example.dart';
 
 class HomeScreenPatient extends HomeScreenContentInterface {
-  HomeScreenPatient({super.key});
+  const HomeScreenPatient({super.key});
 
   @override
   ClientType get clientType => ClientType.patient;
@@ -118,20 +115,9 @@ class _PatientCalendarState extends State<PatientCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    final authToken = context.read<AuthProvider>().accessToken;
-
     return Flexible(
       child: Column(
         children: [
-          ElevatedButton(
-              onPressed: () async {
-                try {
-                  ApiAccess.getAnamnesisData(authToken);
-                } catch (e) {
-                  print(e);
-                }
-              },
-              child: Text('aqui')),
           TableCalendar<Event>(
             locale: Intl.defaultLocale,
             availableCalendarFormats: const {CalendarFormat.month: 'Month'},
