@@ -4,19 +4,30 @@ from rest_framework.response import Response
 from collections import defaultdict
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import MyTokenObtainPairSerializer
-from .models import VinculoProfissionalPaciente
-from .serializers import VinculoSerializer
+from rest_framework.exceptions import PermissionDenied
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-from .models import Perfil, Peso, Refeicao, Exercicio
+from .models import (
+    Peso,
+    Refeicao,
+    Exercicio,
+    VinculoProfissionalPaciente,
+    Anamnese,
+    Cardapio,
+    Ficha,
+)
+
 from .serializers import (
-    PerfilSerializer,
     PesoSerializer,
     RefeicaoSerializer,
     ExercicioSerializer,
     UserSerializer,
+    VinculoSerializer,
+    AnamneseSerializer,
+    CardapioSerializer,
+    FichaSerializer,
 )
 
 # ——————————
@@ -46,23 +57,61 @@ class PesoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # só retorna os pesos do usuário logado
-        return Peso.objects.filter(usuario=self.request.user)
+        user = self.request.user
+        tipo = user.perfil.tipo
+        
+        if tipo == 'paciente':
+            # paciente só vê os próprios pesos
+            return Peso.objects.filter(usuario=user)
+        elif tipo in ['nutricionista', 'educador_fisico']:
+            pacientes_ids = VinculoProfissionalPaciente.objects.filter(
+                profissional=user
+            ).values_list('paciente', flat=True)
+            # nutricionista/educador vê os pesos dos pacientes vinculados
+            return Peso.objects.filter(usuario__in=pacientes_ids)
+        
+        return Peso.objects.none()
 
     def perform_create(self, serializer):
+        user = self.request.user
+        if user.perfil.tipo != 'paciente':
+            # só paciente pode criar peso
+            raise PermissionDenied("Somente pacientes podem criar pesos.")
+        
         # vincula o registro ao usuário logado
-        serializer.save(usuario=self.request.user)
+        serializer.save(usuario=user)
 
 
 class RefeicaoViewSet(viewsets.ModelViewSet):
-    queryset = Refeicao.objects.all()
+    """
+    Se for paciente, lista/exibe só as refeições que o próprio paciente fez.
+    Se for nutricionista, lista/exibe só as refeições que ele criou (nutricionista).
+    """
     serializer_class = RefeicaoSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Refeicao.objects.filter(usuario=self.request.user)
+        user = self.request.user
+        tp = user.perfil.tipo
+
+        if tp == 'paciente':
+            # registros feitos pelo próprio paciente
+            return Refeicao.objects.filter(usuario=user)
+        elif tp == 'nutricionista':
+            pacientes_ids = VinculoProfissionalPaciente.objects.filter(
+                profissional=user
+            ).values_list('paciente', flat=True)
+            # nutricionista vê as refeições dos pacientes vinculados
+            return Refeicao.objects.filter(usuario__in=pacientes_ids)
+        
+        return Refeicao.objects.none()
 
     def perform_create(self, serializer):
-        serializer.save(usuario=self.request.user)
+        user = self.request.user
+        if user.perfil.tipo != 'paciente':
+            raise PermissionDenied("Somente pacientes podem criar refeições.")
+        
+        serializer.save(usuario=user)
 
 
 class ExercicioViewSet(viewsets.ModelViewSet):
@@ -80,19 +129,20 @@ class ExercicioViewSet(viewsets.ModelViewSet):
             # registros feitos pelo próprio paciente
             return Exercicio.objects.filter(usuario=user)
         elif tp == 'educador_fisico':
-            # registros criados por este treinador
-            return Exercicio.objects.filter(treinador=user)
-        return Exercicio.objects.none()
+            pacientes_ids = VinculoProfissionalPaciente.objects.filter(
+                profissional=user
+            ).values_list('paciente', flat=True)
+            # treinador vê os exercícios dos pacientes vinculados
+            return Exercicio.objects.filter(usuario__in=pacientes_ids)
+        else:
+            raise PermissionDenied("Acesso concedido somente para treinadores.")
 
     def perform_create(self, serializer):
         user = self.request.user
-        if user.perfil.tipo == 'paciente':
-            # paciente registra o próprio exercício
-            serializer.save(usuario=user)
-        else:
-            # educador físico registra exercício para um paciente
-            # precisa passar "usuario" no JSON para indicar o cliente
-            serializer.save(treinador=user)
+        if user.perfil.tipo != 'paciente':
+            raise PermissionDenied("Somente pacientes podem criar exercicios.")
+        
+        serializer.save(usuario=user)
 
 # ——————————
 # Calendário Diário
@@ -115,10 +165,6 @@ class CalendarioDiarioView(APIView):
             dados[dia]["exercicios"].append(ExercicioSerializer(e).data)
         return Response(dados)
 
-
-from .models import Anamnese
-from .serializers import AnamneseSerializer
-
 class AnamneseViewSet(viewsets.ModelViewSet):
     """
     CRUD de Anamnese. 
@@ -129,23 +175,30 @@ class AnamneseViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # retorna apenas a ficha do usuário logado (ou vazia)
-        return Anamnese.objects.filter(usuario=self.request.user)
+        # só retorna anamnese do usuário logado
+        user = self.request.user
+        tipo = user.perfil.tipo
+        
+        if tipo == 'paciente':
+            # paciente só vê a própria ficha anamnese
+            return Anamnese.objects.filter(usuario=user)
+        elif tipo in ['nutricionista', 'educador_fisico']:
+            pacientes_ids = VinculoProfissionalPaciente.objects.filter(
+                profissional=user
+            ).values_list('paciente', flat=True)
+            # nutricionista/educador vê as fichas anamnese dos pacientes vinculados
+            return Anamnese.objects.filter(usuario__in=pacientes_ids)
+        
+        return Anamnese.objects.none()
 
     def perform_create(self, serializer):
-        # vincula ao usuário logado
-        serializer.save(usuario=self.request.user)
-
-from .models import Alimento, Cardapio
-from .serializers import AlimentoSerializer, CardapioSerializer
-
-class AlimentoViewSet(viewsets.ModelViewSet):
-    """
-    CRUD de Alimentos – só nutricionistas/criadores precisam chamar.
-    """
-    queryset = Alimento.objects.all()
-    serializer_class = AlimentoSerializer
-    permission_classes = [permissions.IsAuthenticated]  # você pode criar um custom IsNutricionista
+        user = self.request.user
+        if user.perfil.tipo != 'paciente':
+            # só paciente pode criar peso
+            raise PermissionDenied("Somente pacientes podem criar fichas anamnese.")
+        
+        # vincula o registro ao usuário logado
+        serializer.save(usuario=user)
 
 class CardapioViewSet(viewsets.ModelViewSet):
     """
@@ -161,13 +214,22 @@ class CardapioViewSet(viewsets.ModelViewSet):
         if tp == 'paciente':
             return Cardapio.objects.filter(paciente=user)
         elif tp == 'nutricionista':
-            return Cardapio.objects.filter(nutricionista=user)
-        return Cardapio.objects.none()
+            pacientes_ids = VinculoProfissionalPaciente.objects.filter(
+                profissional=user
+            ).values_list('paciente_id', flat=True)
+            # nutricionista vê os cardápios dos pacientes vinculados
+            return Cardapio.objects.filter(paciente__in=pacientes_ids)
+        else:
+            raise PermissionDenied("Acesso somente para nutricionistas.")
 
     def perform_create(self, serializer):
         # somente nutricionista cria cardápio
-        serializer.save(nutricionista=self.request.user)
-
+        user = self.request.user
+        tp = user.perfil.tipo
+        if tp != 'nutricionista':
+            raise PermissionDenied("Apenas nutricionistas podem criar cardápios.")
+        
+        serializer.save(paciente=self.request.user)
 
 class VinculoViewSet(viewsets.ModelViewSet):
     """
@@ -188,4 +250,39 @@ class VinculoViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # só profissionais podem criar
-        serializer.save(profissional=self.request.user)
+        user = self.request.user
+        if user.perfil.tipo not in ['nutricionista', 'educador_fisico']:
+            raise PermissionDenied("Somente nutricionistas ou educadores físicos podem criar vínculos.")
+        
+        serializer.save(profissional=user)
+
+class FichaViewSet(viewsets.ModelViewSet):
+    """
+    Educador vê só suas fichas.
+    Paciente vê só as suas.
+    """
+    serializer_class = FichaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        tp = user.perfil.tipo
+        if tp == 'paciente':
+            return Ficha.objects.filter(usuario=user)
+        elif tp == 'educador_fisico':
+            usuarios_ids = VinculoProfissionalPaciente.objects.filter(
+                profissional=user
+            ).values_list('paciente_id', flat=True)
+            # nutricionista vê os cardápios dos pacientes vinculados
+            return Ficha.objects.filter(usuario__in=usuarios_ids)
+        else:
+            raise PermissionDenied("Acesso somente para treinadores.")
+
+    def perform_create(self, serializer):
+        # somente nutricionista cria cardápio
+        user = self.request.user
+        tp = user.perfil.tipo
+        if tp != 'educador_fisico':
+            raise PermissionDenied("Apenas treinadores podem criar fichas.")
+        
+        serializer.save(usuario=self.request.user)

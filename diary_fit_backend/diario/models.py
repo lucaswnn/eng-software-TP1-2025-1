@@ -22,7 +22,12 @@ class Peso(models.Model):
         return f"{self.usuario.username} – {self.data} – {self.peso} kg"
 
 class Refeicao(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='refeicoes_feitas'
+    )
+    
     data = models.DateField()
     descricao = models.TextField()
 
@@ -34,16 +39,9 @@ class Exercicio(models.Model):
         User, on_delete=models.CASCADE,
         related_name='exercicios_feitos'
     )
-    treinador = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        null=True, blank=True,
-        limit_choices_to={'perfil__tipo': 'educador_fisico'},
-        related_name='exercicios_criados'
-    )
+    
     data = models.DateField()
-    tipo = models.CharField(max_length=100)
-    duracao_minutos = models.IntegerField()
+    descricao = models.CharField(max_length=100)
 
     def __str__(self):
         return f"{self.tipo} por {self.usuario.username}"
@@ -61,15 +59,6 @@ class Anamnese(models.Model):
 
     def __str__(self):
         return f"Anamnese de {self.usuario.username}"
-class Alimento(models.Model):
-    nome = models.CharField(max_length=100)
-    calorias = models.IntegerField(help_text="kcal por porção")
-    proteina_g = models.DecimalField(max_digits=6, decimal_places=2)
-    carboidrato_g = models.DecimalField(max_digits=6, decimal_places=2)
-    gordura_g = models.DecimalField(max_digits=6, decimal_places=2)
-
-    def __str__(self):
-        return f"{self.nome} ({self.calorias} kcal)"
 
 class Cardapio(models.Model):
     paciente = models.ForeignKey(
@@ -78,12 +67,7 @@ class Cardapio(models.Model):
         limit_choices_to={'perfil__tipo': 'paciente'},
         related_name='cardapios_paciente'
     )
-    nutricionista = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        limit_choices_to={'perfil__tipo': 'nutricionista'},
-        related_name='cardapios_nutricionista'
-    )
+    
     descricao = models.TextField(
         default='Sem descrição',
         help_text="Descrição do cardápio"
@@ -121,3 +105,18 @@ class VinculoProfissionalPaciente(models.Model):
 
     def __str__(self):
         return f"{self.profissional.username} ↔ {self.paciente.username}"
+
+class Ficha(models.Model):
+    usuario = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        limit_choices_to={'perfil__tipo': 'paciente'},
+        related_name='fichas_paciente'
+    )
+    
+    descricao = models.TextField()
+    data_inicio = models.DateField()
+    data_fim = models.DateField()
+
+    def __str__(self):
+        return f"Ficha de {self.usuario.username} – {self.data}"
