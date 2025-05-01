@@ -1,22 +1,48 @@
-enum ClientType { trainer, nutritionist, patient, unknown }
+import 'package:diary_fit/tads/anamnesis.dart';
+
+enum ClientType { trainer, nutritionist, patient }
 
 abstract class Client {
-  final String name;
-  final int id;
-  const Client({required this.name, required this.id});
+  final String username;
+
+  Client({required this.username});
+
+  @override
+  String toString() => 'Username: $username';
 }
 
-class ClientTrainer extends Client {
-  const ClientTrainer({required String name, required int id})
-      : super(name: name, id: id);
+abstract class ClientProfessional extends Client {
+  List<ClientPatient>? clients;
+
+  ClientProfessional({
+    required super.username,
+    this.clients,
+  });
 }
 
-class ClientNutritionist extends Client {
-  const ClientNutritionist({required String name, required int id})
-      : super(name: name, id: id);
+class ClientTrainer extends ClientProfessional {
+  ClientTrainer({
+    required super.username,
+    super.clients,
+  });
+}
+
+class ClientNutritionist extends ClientProfessional {
+  ClientNutritionist({
+    required super.username,
+    super.clients,
+  });
 }
 
 class ClientPatient extends Client {
-  const ClientPatient({required String name, required int id})
-      : super(name: name, id: id);
+  Anamnesis? anamnesis;
+  String? nutritionist;
+  String? trainer;
+
+  ClientPatient({
+    required super.username,
+    this.nutritionist,
+    this.trainer,
+    this.anamnesis,
+  });
 }

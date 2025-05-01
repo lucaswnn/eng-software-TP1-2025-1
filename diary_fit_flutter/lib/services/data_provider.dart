@@ -1,9 +1,58 @@
 import 'dart:collection';
+import 'package:diary_fit/services/api_access.dart';
+import 'package:diary_fit/services/api_parser.dart';
+import 'package:diary_fit/tads/client.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:diary_fit/tads/calendar_event.dart';
 import 'package:flutter/material.dart';
 
 class DataProvider extends ChangeNotifier {
+  Client? _client;
+  Client? get client => _client;
+
+  bool get isDataLoaded => _client != null;
+
+  bool isLoading = false;
+
+  Future<void> loadData(ClientAuth clientAuth) async {
+    isLoading = true;
+    notifyListeners();
+
+    switch (clientAuth.clientType) {
+      case ClientType.patient:
+        _loadPatientData(clientAuth);
+      default:
+        throw '';
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> _loadPatientData(ClientAuth clientAuth) async {
+    final authToken = clientAuth.accessToken;
+
+    //final jsonWeightData = await ApiAccess.getWeightData(authToken);
+    //final jsonMealData = await ApiAccess.getMealData(authToken);
+    //final jsonExerciseData = await ApiAccess.getExerciseData(authToken);
+    final jsonAnamnesisData = await ApiAccess.getAnamnesisData(authToken);
+    //final jsonFoodMenudata = await ApiAccess.getFoodMenudata(authToken);
+    final jsonRelationshipData = await ApiAccess.getRelationshipData(authToken);
+    //final jsonWorkoutSheetData = await ApiAccess.getWorkoutSheetData(authToken);
+
+    final anamnesisData = ApiParser.parseAnamnesis(jsonAnamnesisData)?.first;
+    final relationship = ApiParser.parsePatientRelationship(
+      jsonRelationshipData,
+    );
+    
+    _client = ClientPatient(
+      username: clientAuth.username,
+      trainer: relationship[ClientType.trainer],
+      nutritionist: relationship[ClientType.nutritionist],
+      anamnesis: anamnesisData,
+    );
+  }
+
   final _events = LinkedHashMap<DateTime, List<CalendarEvent>>(
     equals: isSameDay,
     hashCode: _getHashCode,
@@ -18,7 +67,7 @@ class DataProvider extends ChangeNotifier {
     final days = _daysInRange(start, end);
 
     return [
-      for (final d in days) ... getEventsForDay(d),
+      for (final d in days) ...getEventsForDay(d),
     ];
   }
 

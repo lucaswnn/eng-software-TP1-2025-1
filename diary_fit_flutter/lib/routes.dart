@@ -1,8 +1,9 @@
+import 'package:diary_fit/screens/home_screen_patient/anamnesis_screen.dart';
 import 'package:diary_fit/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:diary_fit/screens/home_screen.dart';
 import 'package:diary_fit/screens/login_screen.dart';
-import 'package:diary_fit/utils/invalid_route.dart';
+import 'package:diary_fit/utils/widgets/invalid_route.dart';
 import 'package:diary_fit/values/app_routes.dart';
 
 class Routes {
@@ -29,6 +30,9 @@ class Routes {
 
       case AppRoutes.register:
         return getRoute(widget: const RegisterScreen());
+
+      case AppRoutes.anamnesis:
+        return getRoute(widget: const AnamnesisScreen());
 
       default:
         return getRoute(widget: const InvalidRoute());

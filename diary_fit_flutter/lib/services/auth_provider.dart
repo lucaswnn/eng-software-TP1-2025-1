@@ -1,35 +1,41 @@
 import 'package:diary_fit/exceptions/exceptions.dart';
 import 'package:diary_fit/services/api_access.dart';
+import 'package:diary_fit/services/api_parser.dart';
 import 'package:diary_fit/tads/client.dart';
 import 'package:diary_fit/values/app_strings.dart';
 import 'package:flutter/material.dart';
 
 class AuthProvider extends ChangeNotifier {
-  String? _accessToken;
-  String? get accessToken => _accessToken;
-  
-  ClientType? _clientType;
-  final String _clientName = 'fulano';
-  bool _isLoading = false;
+  // ClientAuth contains:
+  // - API access token
+  // - Username
+  // - Client type
+  ClientAuth? _clientAuth;
+  ClientAuth? get clientAuth => _clientAuth;
 
+  // Loading flag
+  // Useful for loading widgets, e.g. waiting for authentication
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  // Login exception message
   String? _loginErrorMessage;
   String? get errorMessage => _loginErrorMessage;
 
+  // Register exception message
   String? _registerErrorMessage;
   String? get registerErrorMessage => _registerErrorMessage;
 
-  bool get isLoading => _isLoading;
-  bool get isAuthenticated => _accessToken != null;
-  ClientType get clientType => _clientType ?? ClientType.patient;
+  // The user is authenticated when access token is not null
+  bool get isAuthenticated => _clientAuth != null;
 
   Future<void> authenticate(String username, String password) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final clientAuth = await ApiAccess.login(username, password);
-      _accessToken = clientAuth.accessToken;
-      _clientType = clientAuth.clientType;
+      final jsonData = await ApiAccess.login(username, password);
+      _clientAuth = ApiParser.parseLogin(username, jsonData);
     } on UnauthorizedException {
       _loginErrorMessage = AppStrings.wrongLoginOrPasswordError;
     } catch (e) {
@@ -58,18 +64,5 @@ class AuthProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
-  }
-
-  Client getClientInstance() {
-    switch (_clientType) {
-      case ClientType.trainer:
-        return ClientTrainer(name: _clientName, id: 0);
-      case ClientType.nutritionist:
-        return ClientNutritionist(name: _clientName, id: 0);
-      case ClientType.patient:
-        return ClientPatient(name: _clientName, id: 0);
-      default:
-        throw Exception('Unknown client type');
-    }
   }
 }

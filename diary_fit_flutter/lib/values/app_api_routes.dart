@@ -18,6 +18,17 @@ class AppApiRoutes {
   static const String backendTrainerType = 'educador_fisico';
   static const String backendNutritionistType = 'nutricionista';
 
-  static const String backendAccessToken = 'access';
-  static const String backendRefreshToken = 'refresh';
+  static const String backendAccessTokenLabel = 'access';
+  static const String backendRefreshTokenLabel = 'refresh';
+  static const String backendUserTypeLabel = 'tipo';
+
+  static const String backendAnamnesisAgeLabel = 'idade';
+  static const String backendAnamnesisHeightLabel = 'altura_cm';
+  static const String backendAnamnesisWeightLabel = 'peso_inicial';
+  static const String backendAnamnesisAllergiesLabel = 'alergias';
+  static const String backendAnamnesisGoalLabel = 'objetivo';
+
+  static const String backendRelationshipProfessionalLabel = 'profissional_username';
+  static const String backendRelationshipPatientLabel = 'paciente_username';
+  static const String backendRelationshipProfessionalTypeLabel = 'tipo_profissional';
 }

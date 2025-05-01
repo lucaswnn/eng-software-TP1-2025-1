@@ -1,5 +1,7 @@
 import 'package:diary_fit/services/auth_provider.dart';
+import 'package:diary_fit/services/data_provider.dart';
 import 'package:diary_fit/utils/snackbar_helper.dart';
+import 'package:diary_fit/utils/widgets/web_layout_constrained_box.dart';
 import 'package:diary_fit/values/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:diary_fit/utils/navigation_helper.dart';
@@ -11,13 +13,15 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 350) {
-        return const LoginScreenWeb();
-      } else {
-        return const LoginScreenMobile();
-      }
-    });
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 350) {
+          return const LoginScreenWeb();
+        } else {
+          return const LoginScreenMobile();
+        }
+      },
+    );
   }
 }
 
@@ -31,11 +35,7 @@ class LoginScreenWeb extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 300,
-              maxHeight: 500,
-            ),
+          child: WebLayoutConstrainedBox(
             child: const Card(
               child: CommonLoginContent(),
             ),
@@ -105,7 +105,10 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthProvider>();
+    final dataState = context.watch<DataProvider>();
+
     final isAuthLoading = authState.isLoading;
+    final isDataLoading = dataState.isLoading;
 
     return Form(
       key: _formKey,
@@ -145,25 +148,29 @@ class _LoginFormState extends State<LoginForm> {
             child: const Text(AppStrings.registerButton),
           ),
           const SizedBox(height: 30),
-          if (isAuthLoading)
+          if (isAuthLoading || isDataLoading)
             const CircularProgressIndicator()
           else
             ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    await authState.authenticate(
-                      _emailController.text,
-                      _passwordController.text,
-                    );
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  await authState.authenticate(
+                    _emailController.text,
+                    _passwordController.text,
+                  );
 
-                    if (authState.isAuthenticated) {
-                      NavigationHelper.pushReplacementNamed(AppRoutes.home);
-                    } else {
-                      SnackbarHelper.showSnackBar(authState.errorMessage);
-                    }
+                  if (authState.isAuthenticated) {
+                    final clientAuth = authState.clientAuth!;
+                    await dataState.loadData(clientAuth);
+
+                    NavigationHelper.pushReplacementNamed(AppRoutes.home);
+                  } else {
+                    SnackbarHelper.showSnackBar(authState.errorMessage);
                   }
-                },
-                child: const Text(AppStrings.loginButton)),
+                }
+              },
+              child: const Text(AppStrings.loginButton),
+            ),
         ],
       ),
     );

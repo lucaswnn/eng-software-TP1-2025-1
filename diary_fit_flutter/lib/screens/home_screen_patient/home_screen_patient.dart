@@ -1,38 +1,59 @@
 import 'package:diary_fit/screens/home_screen_content_interface.dart';
 import 'package:diary_fit/tads/client.dart';
+import 'package:diary_fit/utils/navigation_helper.dart';
+import 'package:diary_fit/values/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:diary_fit/utils/table_calendar_example.dart';
+import 'package:diary_fit/values/app_strings.dart';
 
 class HomeScreenPatient extends HomeScreenContentInterface {
-  const HomeScreenPatient({super.key});
+  HomeScreenPatient({super.key});
 
   @override
   ClientType get clientType => ClientType.patient;
 
   @override
-  String get title => 'Patient Home';
+  String get title => 'Diary Fit Home';
 
-  final List<NavigationRailDestination> _destinations = const [
-    NavigationRailDestination(
-      icon: Icon(Icons.calendar_today),
-      label: Text('Calendar'),
-    ),
-    NavigationRailDestination(
-      icon: Icon(Icons.fitness_center),
-      label: Text('Fitness'),
-    ),
-  ];
+  final _calendarDestination = const NavigationRailDestination(
+    icon: Icon(Icons.calendar_today),
+    label: Text(AppStrings.patientScreenCalendarNavLabel),
+  );
 
-  List<Widget> get _contents => [
-        const PatientCalendar(),
-        const Expanded(child: Center(child: Text('Fitness Content'))),
-      ];
+  final _userDestination = const NavigationRailDestination(
+    icon: Icon(Icons.fitness_center),
+    label: Text(AppStrings.patientScreenUserNavLabel),
+  );
+
+  final _settingsDestination = const NavigationRailDestination(
+    icon: Icon(Icons.settings),
+    label: Text(AppStrings.homePageSettingsNavLabel),
+  );
+
+  final _calendarPage = const PatientCalendar();
+
+  final _userPage = Expanded(
+    child: Column(children: [
+      ElevatedButton(
+          onPressed: () => NavigationHelper.pushNamed(AppRoutes.anamnesis),
+          child: Text('anamnese'))
+    ]),
+  );
+
+  final _settingsPage = const Expanded(
+    child: Center(
+      child: Text('settings'),
+    ),
+  );
 
   @override
-  Map<NavigationRailDestination, Widget> get contents =>
-      Map.fromIterables(_destinations, _contents);
+  Map<NavigationRailDestination, Widget> get contents => {
+        _calendarDestination: _calendarPage,
+        _userDestination: _userPage,
+        _settingsDestination: _settingsPage,
+      };
 }
 
 class PatientCalendar extends StatefulWidget {

@@ -1,6 +1,7 @@
 import 'package:diary_fit/services/auth_provider.dart';
 import 'package:diary_fit/tads/client.dart';
 import 'package:diary_fit/utils/snackbar_helper.dart';
+import 'package:diary_fit/utils/widgets/web_layout_constrained_box.dart';
 import 'package:diary_fit/values/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:diary_fit/utils/navigation_helper.dart';
@@ -27,21 +28,18 @@ class RegisterScreenWeb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blue,
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: 300,
-                maxHeight: 500,
-              ),
-              child: const Card(
-                child: CommonRegisterContent(),
-              ),
+      backgroundColor: Colors.blue,
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: WebLayoutConstrainedBox(
+            child: const Card(
+              child: CommonRegisterContent(),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -51,13 +49,14 @@ class RegisterScreenMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-        backgroundColor: Colors.white,
-        body: Padding(
-          padding: EdgeInsets.all(20),
-          child: Center(
-            child: CommonRegisterContent(),
-          ),
-        ));
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: CommonRegisterContent(),
+        ),
+      ),
+    );
   }
 }
 
