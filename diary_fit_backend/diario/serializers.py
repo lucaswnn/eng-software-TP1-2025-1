@@ -169,12 +169,17 @@ class VinculoSerializer(serializers.ModelSerializer):
 
     paciente_username_input = serializers.CharField(write_only=True, required=False)
 
+    tipo_profissional = serializers.CharField(
+        source='profissional.perfil.tipo', read_only=True
+    )
+
     class Meta:
         model = VinculoProfissionalPaciente
         fields = [
             'profissional_username',
             'paciente_username',
             'paciente_username_input',
+            'tipo_profissional',
             'criado_em',
         ]
     
