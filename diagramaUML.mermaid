@@ -1,0 +1,42 @@
+%% Diagrama de Casos de Uso – Diary Fit
+%% Pode ser colado diretamente em uma issue do GitHub
+
+graph TD
+    %% Atores
+    Paciente([Paciente])
+    Nutricionista([Nutricionista])
+    Educador([Educador Físico])
+
+    %% Sistema (limite do sistema fictício)
+    subgraph Sistema Diary Fit
+        Peso[Registrar peso]
+        Refeicao[Registrar refeições]
+        Exercicio[Registrar exercícios]
+        VerCardapio[Visualizar cardápios]
+        VerFicha[Visualizar ficha de treino]
+        VerAnamnese[Consultar anamnese]
+
+        CriarCardapio[Criar cardápios]
+        VerPeso[Visualizar histórico de peso]
+        VinculoNutri[Vincular-se a paciente]
+
+        CriarFicha[Criar ficha de treino]
+        VerExercicios[Visualizar exercícios registrados]
+        VinculoEducador[Vincular-se a paciente]
+    end
+
+    %% Relacionamentos
+    Paciente --> Peso
+    Paciente --> Refeicao
+    Paciente --> Exercicio
+    Paciente --> VerCardapio
+    Paciente --> VerFicha
+    Paciente --> VerAnamnese
+
+    Nutricionista --> CriarCardapio
+    Nutricionista --> VerPeso
+    Nutricionista --> VinculoNutri
+
+    Educador --> CriarFicha
+    Educador --> VerExercicios
+    Educador --> VinculoEducador
