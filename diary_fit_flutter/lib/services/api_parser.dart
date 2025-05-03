@@ -1,11 +1,15 @@
 import 'package:diary_fit/tads/anamnesis.dart';
 import 'package:diary_fit/tads/client.dart';
+import 'package:diary_fit/tads/weight_data.dart';
 import 'package:diary_fit/values/app_api_routes.dart';
 
 class ApiParser {
   ApiParser._();
 
-  static ClientAuth parseLogin(String username, Map<String, dynamic> jsonData) {
+  static ClientAuth parseLogin(
+    String username,
+    Map<String, dynamic> jsonData,
+  ) {
     final accessToken = jsonData[AppApiRoutes.backendAccessTokenLabel];
     final clientType = jsonData[AppApiRoutes.backendUserTypeLabel];
 
@@ -15,30 +19,31 @@ class ApiParser {
         clientType: _parseClientType(clientType));
   }
 
-  static List<Anamnesis>? parseAnamnesis(
-      List<Map<String, dynamic>> jsonDataList) {
+  static List<WeightData> parseWeight(
+    List<Map<String, dynamic>> jsonDataList,
+  ) {
+    return [
+      for (final v in jsonDataList)
+        WeightData(
+            weight: double.parse(v[AppApiRoutes.backendWeightValueLabel]),
+            date: DateTime.parse(v[AppApiRoutes.backendWeightDateLabel]))
+    ];
+  }
+
+  static Map<String, Anamnesis>? parseAnamnesis(
+    List<Map<String, dynamic>> jsonDataList,
+  ) {
     if (jsonDataList.isNotEmpty) {
-      final anamnesisData = <Anamnesis>[];
-
-      for (final jsonData in jsonDataList) {
-        final age = jsonData[AppApiRoutes.backendAnamnesisAgeLabel];
-        final height = jsonData[AppApiRoutes.backendAnamnesisHeightLabel];
-        final weight = jsonData[AppApiRoutes.backendAnamnesisWeightLabel];
-        final allergies = jsonData[AppApiRoutes.backendAnamnesisAllergiesLabel];
-        final goal = jsonData[AppApiRoutes.backendAnamnesisGoalLabel];
-
-        anamnesisData.add(
-          Anamnesis(
-            age: age,
-            height: double.parse(height),
-            initialWeight: double.parse(weight),
-            allergies: allergies,
-            goal: goal,
-          ),
-        );
-      }
-
-      return anamnesisData;
+      return {
+        for (final v in jsonDataList)
+          v[AppApiRoutes.backendAnamnesisUsernameLabel]: Anamnesis(
+              age: v[AppApiRoutes.backendAnamnesisAgeLabel],
+              height: double.parse(v[AppApiRoutes.backendAnamnesisHeightLabel]),
+              initialWeight:
+                  double.parse(v[AppApiRoutes.backendAnamnesisWeightLabel]),
+              allergies: v[AppApiRoutes.backendAnamnesisAllergiesLabel],
+              goal: v[AppApiRoutes.backendAnamnesisGoalLabel])
+      };
     }
 
     return null;
@@ -60,6 +65,20 @@ class ApiParser {
     }
 
     return returnedData;
+  }
+
+  static Map<String, ClientPatient>? parseProfessionalRelationship(
+    List<Map<String, dynamic>> jsonData,
+  ) {
+    if (jsonData.isNotEmpty) {
+      return {
+        for (final v in jsonData)
+          v[AppApiRoutes.backendRelationshipPatientLabel]: ClientPatient(
+              username: v[AppApiRoutes.backendRelationshipPatientLabel])
+      };
+    }
+
+    return null;
   }
 
   static ClientType _parseClientType(String clientType) {

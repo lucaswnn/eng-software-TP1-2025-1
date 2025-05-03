@@ -22,6 +22,11 @@ class AppApiRoutes {
   static const String backendRefreshTokenLabel = 'refresh';
   static const String backendUserTypeLabel = 'tipo';
 
+  static const String backendWeightUsernameLabel = 'usuario_username';
+  static const String backendWeightDateLabel = 'data';
+  static const String backendWeightValueLabel = 'peso';
+
+  static const String backendAnamnesisUsernameLabel = 'usuario_username';
   static const String backendAnamnesisAgeLabel = 'idade';
   static const String backendAnamnesisHeightLabel = 'altura_cm';
   static const String backendAnamnesisWeightLabel = 'peso_inicial';

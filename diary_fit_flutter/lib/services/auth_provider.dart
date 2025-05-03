@@ -20,11 +20,19 @@ class AuthProvider extends ChangeNotifier {
 
   // Login exception message
   String? _loginErrorMessage;
-  String? get errorMessage => _loginErrorMessage;
+  String? get errorMessage {
+    final ret = _loginErrorMessage;
+    _loginErrorMessage = null;
+    return ret;
+  }
 
   // Register exception message
   String? _registerErrorMessage;
-  String? get registerErrorMessage => _registerErrorMessage;
+  String? get registerErrorMessage {
+    final ret = _registerErrorMessage;
+    _registerErrorMessage = null;
+    return ret;
+  }
 
   // The user is authenticated when access token is not null
   bool get isAuthenticated => _clientAuth != null;
@@ -63,6 +71,11 @@ class AuthProvider extends ChangeNotifier {
     }
 
     _isLoading = false;
+    notifyListeners();
+  }
+
+  void logout() {
+    _clientAuth = null;
     notifyListeners();
   }
 }

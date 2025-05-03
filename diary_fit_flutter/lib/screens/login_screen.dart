@@ -102,6 +102,28 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
+  Future<void> _loadData(
+    AuthProvider authState,
+    DataProvider dataState,
+  ) async {
+    if (_formKey.currentState!.validate()) {
+      await authState.authenticate(
+        _emailController.text,
+        _passwordController.text,
+      );
+
+      if (authState.isAuthenticated) {
+        final clientAuth = authState.clientAuth!;
+        await dataState.loadData(clientAuth);
+        dataState.processCalendarData(clientAuth);
+
+        NavigationHelper.pushReplacementNamed(AppRoutes.home);
+      } else {
+        SnackbarHelper.showSnackBar(authState.errorMessage);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthProvider>();
@@ -152,23 +174,7 @@ class _LoginFormState extends State<LoginForm> {
             const CircularProgressIndicator()
           else
             ElevatedButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  await authState.authenticate(
-                    _emailController.text,
-                    _passwordController.text,
-                  );
-
-                  if (authState.isAuthenticated) {
-                    final clientAuth = authState.clientAuth!;
-                    await dataState.loadData(clientAuth);
-
-                    NavigationHelper.pushReplacementNamed(AppRoutes.home);
-                  } else {
-                    SnackbarHelper.showSnackBar(authState.errorMessage);
-                  }
-                }
-              },
+              onPressed: () async => _loadData(authState, dataState),
               child: const Text(AppStrings.loginButton),
             ),
         ],

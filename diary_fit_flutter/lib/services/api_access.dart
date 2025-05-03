@@ -135,11 +135,14 @@ class ApiAccess {
   }
 
   // funciona
-  static Future<Map<String, dynamic>> getWeightData(String? authToken) async {
-    return await _genericGetWithAuth(
-      authToken: authToken,
-      url: AppApiRoutes.weightData,
-      unknownExceptionMessage: 'Failed to fetch weight data',
+  static Future<List<Map<String, dynamic>>> getWeightData(
+      String? authToken) async {
+    return _processRawList(
+      await _genericGetWithAuth(
+        authToken: authToken,
+        url: AppApiRoutes.weightData,
+        unknownExceptionMessage: 'Failed to fetch weight data',
+      ),
     );
   }
 

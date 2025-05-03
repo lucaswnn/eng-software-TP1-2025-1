@@ -1,35 +1,35 @@
-enum CalendarEventType { nutrition, fitness, health }
+import 'package:flutter/widgets.dart';
+
+enum CalendarEventType {
+  foodMenu,
+  workoutSheet,
+  mealRegister,
+  exerciseRegister,
+  weightRegister,
+}
 
 abstract class CalendarEvent {
-  final String content;
-  final CalendarEventType type;
+  const CalendarEvent();
 
-  const CalendarEvent({
-    required this.content,
-    required this.type,
-  });
+  Widget buildContent(BuildContext context);
 }
 
-class HealthCalendarEvent extends CalendarEvent {
-  const HealthCalendarEvent({required String content})
-      : super(
-          content: content,
-          type: CalendarEventType.health,
-        );
+class CalendarNullEvent extends CalendarEvent{
+  const CalendarNullEvent();
+  
+  @override
+  Widget buildContent(BuildContext context) {
+    return const Center();
+  }
 }
 
-class FitnessCalendarEvent extends CalendarEvent {
-  const FitnessCalendarEvent({required String content})
-      : super(
-          content: content,
-          type: CalendarEventType.fitness,
-        );
-}
+class CalendarWeightEvent extends CalendarEvent {
+  final double weight;
 
-class NutritionCalendarEvent extends CalendarEvent {
-  const NutritionCalendarEvent({required String content})
-      : super(
-          content: content,
-          type: CalendarEventType.nutrition,
-        );
+  CalendarWeightEvent({required this.weight});
+
+  @override
+  Widget buildContent(BuildContext context) {
+    return Center(child: Text('peso: $weight'));
+  }
 }

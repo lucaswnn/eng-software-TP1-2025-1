@@ -1,4 +1,6 @@
 import 'package:diary_fit/screens/home_screen_patient/anamnesis_screen.dart';
+import 'package:diary_fit/screens/home_screen_patient/associated_professionals_screen.dart';
+import 'package:diary_fit/screens/logout_screen.dart';
 import 'package:diary_fit/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:diary_fit/screens/home_screen.dart';
@@ -33,6 +35,12 @@ class Routes {
 
       case AppRoutes.anamnesis:
         return getRoute(widget: const AnamnesisScreen());
+
+      case AppRoutes.associatedProfessionals:
+        return getRoute(widget: const AssociatedProfessionalsScreen());
+
+      case AppRoutes.logout:
+        return getRoute(widget: const LogoutScreen());
 
       default:
         return getRoute(widget: const InvalidRoute());

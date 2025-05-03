@@ -1,4 +1,5 @@
 import 'package:diary_fit/tads/anamnesis.dart';
+import 'package:diary_fit/tads/weight_data.dart';
 
 enum ClientType { trainer, nutritionist, patient }
 
@@ -12,7 +13,7 @@ abstract class Client {
 }
 
 abstract class ClientProfessional extends Client {
-  List<ClientPatient>? clients;
+  Map<String, ClientPatient>? clients;
 
   ClientProfessional({
     required super.username,
@@ -35,6 +36,7 @@ class ClientNutritionist extends ClientProfessional {
 }
 
 class ClientPatient extends Client {
+  List<WeightData>? weightData;
   Anamnesis? anamnesis;
   String? nutritionist;
   String? trainer;
@@ -43,6 +45,7 @@ class ClientPatient extends Client {
     required super.username,
     this.nutritionist,
     this.trainer,
+    this.weightData,
     this.anamnesis,
   });
 }

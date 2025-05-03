@@ -1,6 +1,9 @@
+import 'package:diary_fit/services/auth_provider.dart';
 import 'package:diary_fit/services/data_provider.dart';
 import 'package:diary_fit/tads/client.dart';
+import 'package:diary_fit/utils/navigation_helper.dart';
 import 'package:diary_fit/utils/snackbar_helper.dart';
+import 'package:diary_fit/utils/widgets/web_layout_constrained_box.dart';
 import 'package:diary_fit/values/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,15 +35,24 @@ class _AnamnesisSheet extends StatelessWidget {
     final anamnesisContent = anamnesis.values.toList();
 
     return Scaffold(
+      backgroundColor: Colors.blue,
+      appBar: AppBar(
+        title: const Text('Ficha Anamnese'),
+      ),
       body: Center(
-        child: ListView.builder(
-          itemCount: anamnesisLabels.length,
-          itemBuilder: (_, index) {
-            return ListTile(
-              leading: Text(anamnesisLabels[index]),
-              trailing: Text('${anamnesisContent[index]}'),
-            );
-          },
+        child: WebLayoutConstrainedBox(
+          child: Card(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: anamnesisLabels.length,
+              itemBuilder: (_, index) {
+                return ListTile(
+                  title: Text(anamnesisLabels[index]),
+                  trailing: Text('${anamnesisContent[index]}'),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -75,86 +87,119 @@ class _AnamnesisFormState extends State<_AnamnesisForm> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.read<AuthProvider>();
+    final dataState = context.watch<DataProvider>();
+
     return Scaffold(
+      backgroundColor: Colors.blue,
+      appBar: AppBar(
+        title: const Text('Preencha sua ficha anamnese'),
+      ),
       body: Center(
-          child: Form(
-        key: _formKey,
-        child: Column(children: [
-          TextFormField(
-            controller: _ageController,
-            decoration: const InputDecoration(
-              labelText: AppStrings.anamnesisAgeLabel,
+        child: WebLayoutConstrainedBox(
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextFormField(
+                      controller: _ageController,
+                      decoration: const InputDecoration(
+                        labelText: AppStrings.anamnesisAgeLabel,
+                      ),
+                      validator: (value) {
+                        if (value == null || int.tryParse(value) == null) {
+                          return AppStrings.anamnesisInvalidAgeMessage;
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      controller: _heightController,
+                      decoration: const InputDecoration(
+                        labelText: AppStrings.anamnesisHeightLabel,
+                      ),
+                      validator: (value) {
+                        if (value == null || double.tryParse(value) == null) {
+                          return AppStrings.anamnesisInvalidHeightMessage;
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      controller: _weightController,
+                      decoration: const InputDecoration(
+                        labelText: AppStrings.anamnesisWeightLabel,
+                      ),
+                      validator: (value) {
+                        if (value == null || double.tryParse(value) == null) {
+                          return AppStrings.anamnesisInvalidWeightMessage;
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      controller: _allergiesController,
+                      decoration: const InputDecoration(
+                        labelText: AppStrings.anamnesisAllergiesLabel,
+                      ),
+                      validator: (value) {
+                        if (value == null) {
+                          return AppStrings.anamnesisInvalidAllergiesMessage;
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      controller: _goalController,
+                      decoration: const InputDecoration(
+                        labelText: AppStrings.anamnesisGoalLabel,
+                      ),
+                      validator: (value) {
+                        if (value == null) {
+                          return AppStrings.anamnesisInvalidGoalMessage;
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 30),
+                    if (dataState.isLoading)
+                      const CircularProgressIndicator()
+                    else
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            dataState.sendAnamnesis(
+                              authState.clientAuth!,
+                              dataState.client as ClientPatient,
+                            );
+
+                            final errorMessage = dataState.errorMessage;
+                            if (errorMessage != null) {
+                              SnackbarHelper.showSnackBar(errorMessage);
+                            } else {
+                              SnackbarHelper.showSnackBar('feito');
+                              NavigationHelper.pop();
+                            }
+                          }
+                        },
+                        child: const Text(AppStrings.anamnesisSubmitButton),
+                      ),
+                  ],
+                ),
+              ),
             ),
-            validator: (value) {
-              if (value == null || int.tryParse(value) == null) {
-                return AppStrings.anamnesisInvalidAgeMessage;
-              }
-              return null;
-            },
           ),
-          const SizedBox(height: 5),
-          TextFormField(
-            controller: _heightController,
-            decoration: const InputDecoration(
-              labelText: AppStrings.anamnesisHeightLabel,
-            ),
-            validator: (value) {
-              if (value == null || double.tryParse(value) == null) {
-                return AppStrings.anamnesisInvalidHeightMessage;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 5),
-          TextFormField(
-            controller: _weightController,
-            decoration: const InputDecoration(
-              labelText: AppStrings.anamnesisWeightLabel,
-            ),
-            validator: (value) {
-              if (value == null || double.tryParse(value) == null) {
-                return AppStrings.anamnesisInvalidWeightMessage;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 5),
-          TextFormField(
-            controller: _allergiesController,
-            decoration: const InputDecoration(
-              labelText: AppStrings.anamnesisAllergiesLabel,
-            ),
-            validator: (value) {
-              if (value == null) {
-                return AppStrings.anamnesisInvalidAllergiesMessage;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 5),
-          TextFormField(
-            controller: _goalController,
-            decoration: const InputDecoration(
-              labelText: AppStrings.anamnesisGoalLabel,
-            ),
-            validator: (value) {
-              if (value == null) {
-                return AppStrings.anamnesisInvalidGoalMessage;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 30),
-          ElevatedButton(
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                SnackbarHelper.showSnackBar('feito');
-              }
-            },
-            child: const Text(AppStrings.anamnesisSubmitButton),
-          ),
-        ]),
-      )),
+        ),
+      ),
     );
   }
 }
