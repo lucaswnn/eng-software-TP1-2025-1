@@ -1,0 +1,81 @@
+classDiagram
+    %% Classe externa User (Django)
+    class User {
+        <<importada>>
+        id: Integer
+        username: String
+        email: String
+        ...
+    }
+
+    %% Modelos do Diary Fit
+    class Perfil {
+        +usuario: OneToOneField(User)
+        +tipo: CharField
+        +__str__(): String
+    }
+
+    class Peso {
+        +usuario: ForeignKey(User)
+        +data: DateField
+        +peso: DecimalField
+        +__str__(): String
+    }
+
+    class Refeicao {
+        +usuario: ForeignKey(User)
+        +data: DateField
+        +descricao: TextField
+        +__str__(): String
+    }
+
+    class Exercicio {
+        +usuario: ForeignKey(User)
+        +data: DateField
+        +descricao: CharField
+        +__str__(): String
+    }
+
+    class Anamnese {
+        +usuario: OneToOneField(User)
+        +idade: IntegerField
+        +altura_cm: DecimalField
+        +peso_inicial: DecimalField
+        +alergias: TextField
+        +objetivo: CharField
+        +__str__(): String
+    }
+
+    class Cardapio {
+        +paciente: ForeignKey(User)
+        +descricao: TextField
+        +data_inicio: DateField
+        +data_fim: DateField
+        +__str__(): String
+    }
+
+    class VinculoProfissionalPaciente {
+        +profissional: ForeignKey(User)
+        +paciente: ForeignKey(User)
+        +criado_em: DateTimeField
+        +__str__(): String
+    }
+
+    class Ficha {
+        +usuario: ForeignKey(User)
+        +descricao: TextField
+        +data_inicio: DateField
+        +data_fim: DateField
+        +__str__(): String
+    }
+
+    %% Associações
+    Perfil         --> User : usuario
+    Peso           --> User : usuario
+    Refeicao       --> User : usuario
+    Exercicio      --> User : usuario
+    Anamnese       --> User : usuario
+    Cardapio       --> User : paciente
+    VinculoProfissionalPaciente --> User : profissional
+    VinculoProfissionalPaciente --> User : paciente
+    Ficha          --> User : usuario
