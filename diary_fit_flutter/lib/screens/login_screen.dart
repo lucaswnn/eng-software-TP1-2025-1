@@ -8,6 +8,10 @@ import 'package:diary_fit/utils/navigation_helper.dart';
 import 'package:diary_fit/values/app_routes.dart';
 import 'package:provider/provider.dart';
 
+// Login UI
+// The initial idea was to divide the layout type to
+// wide and tiny screens. Instead, the general UI was implemented
+// based only on wide screens.
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -102,6 +106,8 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
+  // This method is responsible for login and load the user data
+  // Shows a message if something went wrong
   Future<void> _loadData(
     AuthProvider authState,
     DataProvider dataState,
@@ -129,6 +135,7 @@ class _LoginFormState extends State<LoginForm> {
     final authState = context.watch<AuthProvider>();
     final dataState = context.watch<DataProvider>();
 
+    // shows a CircularProgressIndicator until backend data is processed
     final isAuthLoading = authState.isLoading;
     final isDataLoading = dataState.isLoading;
 

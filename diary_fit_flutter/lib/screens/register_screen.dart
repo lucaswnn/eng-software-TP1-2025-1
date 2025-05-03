@@ -7,6 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:diary_fit/utils/navigation_helper.dart';
 import 'package:provider/provider.dart';
 
+// Register UI
+// The initial idea was to divide the layout type to
+// wide and tiny screens. Instead, the general UI was implemented
+// based only on wide screens.
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
@@ -137,6 +141,8 @@ class _RegisterFormState extends State<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthProvider>();
+
+    // shows a CircularProgressIndicator until backend data is processed
     final isAuthLoading = authState.isLoading;
 
     return Form(

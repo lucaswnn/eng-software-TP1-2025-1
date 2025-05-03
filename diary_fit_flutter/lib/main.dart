@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 
 void main() async {
   await initializeDateFormatting();
+
+  // Defines the default locale for table_calendar
   Intl.defaultLocale = 'pt_BR';
 
   runApp(

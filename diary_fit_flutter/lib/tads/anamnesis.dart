@@ -1,3 +1,4 @@
+// Anamnesis data structure
 class Anamnesis {
   final int age;
   final double height;

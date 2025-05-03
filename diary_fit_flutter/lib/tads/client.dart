@@ -1,5 +1,7 @@
 import 'package:diary_fit/tads/anamnesis.dart';
-import 'package:diary_fit/tads/weight_data.dart';
+import 'package:diary_fit/tads/patient_data.dart';
+
+// Clients data structures
 
 enum ClientType { trainer, nutritionist, patient }
 
@@ -40,6 +42,8 @@ class ClientPatient extends Client {
   Anamnesis? anamnesis;
   String? nutritionist;
   String? trainer;
+
+  // TODO: criar novas listas para foodMenuData, workoutSheetData, mealData e exerciseData
 
   ClientPatient({
     required super.username,

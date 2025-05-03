@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+// Show a snackbar message
+// The widget summoner must be a scaffold descendant
 class SnackbarHelper {
-  const SnackbarHelper._();
+  const SnackbarHelper._(); // Private constructor to prevent instantiation
 
   static final _key = GlobalKey<ScaffoldMessengerState>();
 

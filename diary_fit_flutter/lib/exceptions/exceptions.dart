@@ -1,12 +1,6 @@
-class AlreadyExistsException implements Exception {
-  final String message;
+// Useful exceptions for dealing with API responses
 
-  AlreadyExistsException(this.message);
-
-  @override
-  String toString() => 'AlreadyExistsException: $message';
-}
-
+// 400 status code
 class BadRequestException implements Exception {
   final String message;
 
@@ -16,6 +10,7 @@ class BadRequestException implements Exception {
   String toString() => 'BadRequestException: $message';
 }
 
+// 401 status code
 class UnauthorizedException implements Exception {
   final String message;
 
@@ -25,6 +20,7 @@ class UnauthorizedException implements Exception {
   String toString() => 'UnauthorizedException: $message';
 }
 
+// 403 status code
 class ForbiddenException implements Exception {
   final String message;
 
@@ -34,6 +30,7 @@ class ForbiddenException implements Exception {
   String toString() => 'ForbiddenException: $message';
 }
 
+// 404 status code
 class NotFoundException implements Exception {
   final String message;
 

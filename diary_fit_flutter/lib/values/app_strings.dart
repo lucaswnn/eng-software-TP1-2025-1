@@ -1,7 +1,8 @@
 import 'package:diary_fit/tads/client.dart';
 
+// App general string literals
 class AppStrings {
-  const AppStrings._();
+  const AppStrings._(); // Private constructor to prevent instantiation
 
   // General strings
   static const String appName = 'Diary Fit';

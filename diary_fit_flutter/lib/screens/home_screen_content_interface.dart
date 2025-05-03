@@ -1,9 +1,16 @@
 import 'package:diary_fit/tads/client.dart';
 import 'package:flutter/material.dart';
 
+// Base home screen class responsible for building the main UI
 abstract class HomeScreenContentInterface extends StatefulWidget {
   const HomeScreenContentInterface({super.key});
 
+  // Superclasses must implement these methods
+  // ClientType helps the HomeScreen class to decide which
+  // UI type to build
+  // The basic layout is divided into a NavigationRail on the left and the
+  // respective content on the right
+  
   ClientType get clientType;
   String get title;
   Map<NavigationRailDestination, Widget> get contents;

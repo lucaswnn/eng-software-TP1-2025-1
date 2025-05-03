@@ -4,6 +4,7 @@ import 'package:diary_fit/routes.dart';
 import 'package:diary_fit/utils/navigation_helper.dart';
 import 'package:diary_fit/values/app_routes.dart';
 
+// App base builder
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

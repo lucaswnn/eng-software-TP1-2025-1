@@ -1,6 +1,8 @@
+// Flutter app routes
 class AppRoutes {
-  const AppRoutes._();
-
+  const AppRoutes._(); // Private constructor to prevent instantiation
+  // TODO: colocar rotas para tela da lista de clientes e dados gerais do cliente atual
+  // (no caso de usuários profissionais)
   static const String login = '/login';
   static const String register = '/login/registro';
   static const String home = '/home';

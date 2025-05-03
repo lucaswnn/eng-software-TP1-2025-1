@@ -5,6 +5,7 @@ import 'package:diary_fit/tads/client.dart';
 import 'package:diary_fit/values/app_strings.dart';
 import 'package:flutter/material.dart';
 
+// Provider ChangeNotifier responsible for dealing with authenticating data
 class AuthProvider extends ChangeNotifier {
   // ClientAuth contains:
   // - API access token
@@ -64,7 +65,7 @@ class AuthProvider extends ChangeNotifier {
 
     try {
       await ApiAccess.register(username, password, clientType);
-    } on AlreadyExistsException {
+    } on BadRequestException {
       _registerErrorMessage = AppStrings.loginAlreadyExistsError;
     } catch (e) {
       _registerErrorMessage = '${AppStrings.genericServerError}\n$e';

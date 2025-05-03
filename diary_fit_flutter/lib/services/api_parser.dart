@@ -1,10 +1,11 @@
 import 'package:diary_fit/tads/anamnesis.dart';
 import 'package:diary_fit/tads/client.dart';
-import 'package:diary_fit/tads/weight_data.dart';
+import 'package:diary_fit/tads/patient_data.dart';
 import 'package:diary_fit/values/app_api_routes.dart';
 
+// Class responsible to parse the json data to Diary Fit TADs
 class ApiParser {
-  ApiParser._();
+  ApiParser._(); // Private constructor to prevent instantiation
 
   static ClientAuth parseLogin(
     String username,
@@ -96,6 +97,8 @@ class ApiParser {
         throw Exception('ApiParser: unknown ClientType');
     }
   }
+
+  // TODO: implementar parsers para cardápio, ficha, refeições e exercícios
 }
 
 class ClientAuth {

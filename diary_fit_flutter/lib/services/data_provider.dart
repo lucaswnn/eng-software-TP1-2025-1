@@ -3,41 +3,42 @@ import 'package:diary_fit/services/api_access.dart';
 import 'package:diary_fit/services/api_parser.dart';
 import 'package:diary_fit/services/calendar_parser.dart';
 import 'package:diary_fit/tads/client.dart';
-import 'package:diary_fit/tads/weight_data.dart';
+import 'package:diary_fit/tads/patient_data.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:diary_fit/tads/calendar_event.dart';
 import 'package:flutter/material.dart';
 
+// Provider ChangeNotifier responsible for dealing with authenticating data
 class DataProvider extends ChangeNotifier {
+  // Current UI client
   Client? _client;
   Client? get client => _client;
 
+  // The current selected patient
+  // Only used if the user is a professional
   ClientPatient? _currentPatient;
   ClientPatient? get currentPatient => _currentPatient;
-  set currentPatient(ClientPatient? patient) => _currentPatient = patient;
+  set currentPatient(ClientPatient? patient) {
+    currentPatient = patient;
+    notifyListeners();
+  }
 
+  // HashMap with the calendar events
   LinkedHashMap<DateTime, List<CalendarEvent>>? _calendarData;
   LinkedHashMap<DateTime, List<CalendarEvent>>? get calendarData =>
       _calendarData;
 
-  List<WeightData>? _weightData;
-  List<WeightData>? get weightData => _weightData;
-
-  bool get isDataLoaded => _client != null;
-
+  // Loading flag
+  // Useful for loading widgets, e.g. waiting for calendar data
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  // API error message
   String? _errorMessage;
   String? get errorMessage {
     final ret = _errorMessage;
     _errorMessage = null;
     return ret;
-  }
-
-  set client(Client? client) {
-    _client = client;
-    notifyListeners();
   }
 
   Future<void> loadData(ClientAuth clientAuth) async {
@@ -60,6 +61,7 @@ class DataProvider extends ChangeNotifier {
   Future<void> _loadPatientData(ClientAuth clientAuth) async {
     final authToken = clientAuth.accessToken;
 
+    // TODO: capturar demais dados do usuário
     final jsonWeightData = await ApiAccess.getWeightData(authToken);
     //final jsonMealData = await ApiAccess.getMealData(authToken);
     //final jsonExerciseData = await ApiAccess.getExerciseData(authToken);
@@ -68,6 +70,7 @@ class DataProvider extends ChangeNotifier {
     final jsonRelationshipData = await ApiAccess.getRelationshipData(authToken);
     //final jsonWorkoutSheetData = await ApiAccess.getWorkoutSheetData(authToken);
 
+    // TODO: fazer o parse dos demais dados
     final weightData = ApiParser.parseWeight(jsonWeightData);
 
     final anamnesisData =
@@ -77,6 +80,7 @@ class DataProvider extends ChangeNotifier {
       jsonRelationshipData,
     );
 
+    // TODO: inserir no _client os demais dados
     _client = ClientPatient(
       username: clientAuth.username,
       trainer: relationship[ClientType.trainer],
@@ -89,6 +93,8 @@ class DataProvider extends ChangeNotifier {
   Future<void> _loadNutritionistData(ClientAuth clientAuth) async {
     final authToken = clientAuth.accessToken;
 
+    // TODO: capturar os demais dados
+
     //final jsonWeightData = await ApiAccess.getWeightData(authToken);
     //final jsonMealData = await ApiAccess.getMealData(authToken);
     //final jsonExerciseData = await ApiAccess.getExerciseData(authToken);
@@ -97,11 +103,13 @@ class DataProvider extends ChangeNotifier {
     final jsonRelationshipData = await ApiAccess.getRelationshipData(authToken);
     //final jsonWorkoutSheetData = await ApiAccess.getWorkoutSheetData(authToken);
 
+    // TODO: fazer o parse dos demais dados
     final anamnesisData = ApiParser.parseAnamnesis(jsonAnamnesisData);
     final relationship = ApiParser.parseProfessionalRelationship(
       jsonRelationshipData,
     );
 
+    // TODO: inserir os demais dados nos relacionamentos
     if (anamnesisData != null) {
       for (final client in anamnesisData.keys) {
         relationship?[client]?.anamnesis = anamnesisData[client];
@@ -113,12 +121,12 @@ class DataProvider extends ChangeNotifier {
       clients: relationship,
     );
 
-    if(relationship != null && relationship.isNotEmpty){
+    if (relationship != null && relationship.isNotEmpty) {
       _currentPatient = relationship.values.first;
     }
   }
 
-  void processCalendarData(ClientAuth clientAuth){
+  void processCalendarData(ClientAuth clientAuth) {
     _isLoading = true;
     notifyListeners();
 
@@ -127,8 +135,8 @@ class DataProvider extends ChangeNotifier {
         _processPatientCalendarData();
       case ClientType.nutritionist:
         _processNutritionistCalendarData();
-      default:
-        throw Exception('Undefined client type');
+      case ClientType.trainer:
+        _processTrainerCalendarData();
     }
 
     _isLoading = false;
@@ -151,9 +159,18 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
-  void _processNutritionistCalendarData(){
-    
+  void _processNutritionistCalendarData() {
+    // TODO: colocar no _calendarData os dados do _currentPatient somente
+    // dos dados relacionados a um nutricionista
   }
+
+  void _processTrainerCalendarData() {
+    // TODO: colocar no _calendarData os dados do _currentPatient somente
+    // dos dados relacionados a um educador físico
+  }
+
+  // TODO: implementar sendFoodMenu (cardápio), sendWorkoutSheet (ficha),
+  // sendMeal (refeição) e sendExercise (exercício)
 
   Future<void> sendWeight(
     ClientAuth clientAuth,
@@ -202,33 +219,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  final _events = LinkedHashMap<DateTime, List<CalendarEvent>>(
-    equals: isSameDay,
-    hashCode: _getHashCode,
-  );
-
-  List<CalendarEvent> getEventsForDay(DateTime day) {
-    return _events[day] ?? [];
-  }
-
-  List<CalendarEvent> getEventsForRange(DateTime start, DateTime end) {
-    // Implementation example
-    final days = _daysInRange(start, end);
-
-    return [
-      for (final d in days) ...getEventsForDay(d),
-    ];
-  }
-
-  List<DateTime> _daysInRange(DateTime first, DateTime last) {
-    final dayCount = last.difference(first).inDays + 1;
-    return List.generate(
-      dayCount,
-      (index) => DateTime.utc(first.year, first.month, first.day + index),
-    );
-  }
-
-  void cleanData(){
+  void cleanData() {
     _client = null;
     _calendarData = null;
     notifyListeners();

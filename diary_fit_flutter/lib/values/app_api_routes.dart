@@ -1,6 +1,8 @@
+// Class that centralizes the backend patterns
 class AppApiRoutes {
   AppApiRoutes._(); // Private constructor to prevent instantiation
 
+  // API routes
   static const String baseUrl = 'http://127.0.0.1:8000';
   static const String login = '$baseUrl/api/token/';
   static const String register = '$baseUrl/api/signup/';
@@ -14,18 +16,24 @@ class AppApiRoutes {
   static const String relationshipData = '$baseUrl/api/vinculos/';
   static const String workoutSheetData = '$baseUrl/api/fichas/';
 
+  // Backend user types
   static const String backendPatientType = 'paciente';
   static const String backendTrainerType = 'educador_fisico';
   static const String backendNutritionistType = 'nutricionista';
 
+  // Backend login labels
   static const String backendAccessTokenLabel = 'access';
   static const String backendRefreshTokenLabel = 'refresh';
   static const String backendUserTypeLabel = 'tipo';
 
+  // TODO: colocar os labels dos serializers do cardápio, ficha, refeição e exercício
+
+  // Backend weight serializer labels
   static const String backendWeightUsernameLabel = 'usuario_username';
   static const String backendWeightDateLabel = 'data';
   static const String backendWeightValueLabel = 'peso';
 
+  // Backend anamnesis serializer labels
   static const String backendAnamnesisUsernameLabel = 'usuario_username';
   static const String backendAnamnesisAgeLabel = 'idade';
   static const String backendAnamnesisHeightLabel = 'altura_cm';
@@ -33,6 +41,7 @@ class AppApiRoutes {
   static const String backendAnamnesisAllergiesLabel = 'alergias';
   static const String backendAnamnesisGoalLabel = 'objetivo';
 
+  // Backend relationship serializer labels
   static const String backendRelationshipProfessionalLabel = 'profissional_username';
   static const String backendRelationshipPatientLabel = 'paciente_username';
   static const String backendRelationshipProfessionalTypeLabel = 'tipo_profissional';

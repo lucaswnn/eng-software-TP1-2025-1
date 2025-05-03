@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'package:diary_fit/services/data_provider.dart';
 import 'package:diary_fit/tads/calendar_event.dart';
-import 'package:diary_fit/utils/table_calendar_example.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +44,6 @@ class _CalendarInterfaceState extends State<CalendarInterface> {
   @override
   void initState() {
     super.initState();
-
     _selectedEvents = ValueNotifier([]);
     _selectedEvent = ValueNotifier(const CalendarNullEvent());
 
@@ -65,7 +63,7 @@ class _CalendarInterfaceState extends State<CalendarInterface> {
 
   List<CalendarEvent> _getEventsForRange(DateTime start, DateTime end) {
     // Implementation example
-    final days = daysInRange(start, end);
+    final days = _daysInRange(start, end);
 
     return [
       for (final d in days) ..._getEventsForDay(d),
@@ -122,6 +120,9 @@ class _CalendarInterfaceState extends State<CalendarInterface> {
 
   void _setEvents(LinkedHashMap<DateTime, List<CalendarEvent>> events) {
     setState(() => _events = events);
+    _rangeSelectionMode == RangeSelectionMode.toggledOff
+        ? _selectedEvents.value = _getEventsForDay(_selectedDay!)
+        : _selectedEvents.value = _getEventsForRange(_rangeStart!, _rangeEnd!);
   }
 
   @override
@@ -205,4 +206,12 @@ class _CalendarInterfaceState extends State<CalendarInterface> {
       ),
     );
   }
+}
+
+List<DateTime> _daysInRange(DateTime first, DateTime last) {
+  final dayCount = last.difference(first).inDays + 1;
+  return List.generate(
+    dayCount,
+    (index) => DateTime.utc(first.year, first.month, first.day + index),
+  );
 }

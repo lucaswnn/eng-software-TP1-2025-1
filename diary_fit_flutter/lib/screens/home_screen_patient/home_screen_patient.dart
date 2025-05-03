@@ -6,16 +6,19 @@ import 'package:diary_fit/values/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:diary_fit/values/app_strings.dart';
 
+// Class responsible for patient UI homepage
 class HomeScreenPatient extends HomeScreenContentInterface {
   HomeScreenPatient({super.key});
 
   @override
   ClientType get clientType => ClientType.patient;
 
+  // title appears at home AppBar
   @override
   String get title => 'Diary Fit Home';
 
-  // Navigation destinations
+  // The following widgets are NavigationRail destinations
+
   final _calendarDestination = const NavigationRailDestination(
     icon: Icon(Icons.calendar_today),
     label: Text(AppStrings.patientScreenCalendarNavLabel),
@@ -31,7 +34,9 @@ class HomeScreenPatient extends HomeScreenContentInterface {
     label: Text(AppStrings.homePageSettingsNavLabel),
   );
 
-  // Content widgets associated with navigation destinations
+  // The following widgets are the content based on the
+  // current selected NavigationRail destination
+
   final _calendarPage = const PatientCalendar();
 
   final _userPage = Expanded(
@@ -40,12 +45,14 @@ class HomeScreenPatient extends HomeScreenContentInterface {
       children: [
         ListTile(
           leading: const Icon(Icons.list),
+          // TODO: colocar strings no AppStrings
           title: const Text('Ficha anamnese'),
           subtitle: const Text('Dados para consulta de especialistas'),
           onTap: () => NavigationHelper.pushNamed(AppRoutes.anamnesis),
         ),
         ListTile(
           leading: const Icon(Icons.people),
+          // TODO: colocar strings no AppStrings
           title: const Text('Profissionais'),
           subtitle: const Text('Treinadores e nutricionistas associados'),
           onTap: () =>
@@ -61,6 +68,7 @@ class HomeScreenPatient extends HomeScreenContentInterface {
       children: [
         ListTile(
           leading: const Icon(Icons.power_settings_new),
+          // TODO: colocar string no AppStrings
           title: const Text('Fazer logout'),
           onTap: () => NavigationHelper.pushNamed(AppRoutes.logout),
         )

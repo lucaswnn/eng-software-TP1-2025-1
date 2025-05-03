@@ -1,3 +1,4 @@
+import 'package:diary_fit/screens/anamnesis_sheet.dart';
 import 'package:diary_fit/services/auth_provider.dart';
 import 'package:diary_fit/services/data_provider.dart';
 import 'package:diary_fit/tads/client.dart';
@@ -8,6 +9,9 @@ import 'package:diary_fit/values/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// Class responsible for the anamnesis UI
+// Shows the anamnesis data if the current client already sent data
+// otherwise it shows the anamnesis form
 class AnamnesisScreen extends StatelessWidget {
   const AnamnesisScreen({super.key});
 
@@ -19,46 +23,11 @@ class AnamnesisScreen extends StatelessWidget {
     if (anamnesis == null) {
       return const _AnamnesisForm();
     }
-    return const _AnamnesisSheet();
+    return const AnamnesisSheet();
   }
 }
 
-class _AnamnesisSheet extends StatelessWidget {
-  const _AnamnesisSheet();
-
-  @override
-  Widget build(BuildContext context) {
-    final client = context.read<DataProvider>().client! as ClientPatient;
-    final anamnesis = client.anamnesis!.anamnesisDataMap;
-
-    final anamnesisLabels = anamnesis.keys.toList();
-    final anamnesisContent = anamnesis.values.toList();
-
-    return Scaffold(
-      backgroundColor: Colors.blue,
-      appBar: AppBar(
-        title: const Text('Ficha Anamnese'),
-      ),
-      body: Center(
-        child: WebLayoutConstrainedBox(
-          child: Card(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: anamnesisLabels.length,
-              itemBuilder: (_, index) {
-                return ListTile(
-                  title: Text(anamnesisLabels[index]),
-                  trailing: Text('${anamnesisContent[index]}'),
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
+// Anamnesis form
 class _AnamnesisForm extends StatefulWidget {
   const _AnamnesisForm();
 
@@ -93,6 +62,7 @@ class _AnamnesisFormState extends State<_AnamnesisForm> {
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
+        // TODO: colocar string no AppStrings
         title: const Text('Preencha sua ficha anamnese'),
       ),
       body: Center(

@@ -7,15 +7,18 @@ import 'package:diary_fit/values/app_api_routes.dart';
 import 'package:diary_fit/values/app_strings.dart';
 import 'package:http/http.dart' as http;
 
-const Map<ClientType, String> clientTypeApiMap = {
-  ClientType.trainer: 'educador_fisico',
-  ClientType.nutritionist: 'nutricionista',
-  ClientType.patient: 'paciente',
-};
-
+// Class responsible for accessing backend API
 class ApiAccess {
-  ApiAccess._();
+  ApiAccess._(); // Private constructor to prevent instantiation
 
+  // Maps the ClientTye based on backend values
+  static const Map<ClientType, String> _clientTypeApiMap = {
+    ClientType.trainer: AppApiRoutes.backendTrainerType,
+    ClientType.nutritionist: AppApiRoutes.backendNutritionistType,
+    ClientType.patient: AppApiRoutes.backendPatientType,
+  };
+
+  // Generic response processor
   static dynamic _processResponse(
     http.Response response,
     String unknownExceptionMessage,
@@ -36,10 +39,12 @@ class ApiAccess {
     }
   }
 
+  // Processes json response body based on lists
   static List<Map<String, dynamic>> _processRawList(List<dynamic> rawList) {
     return List<Map<String, dynamic>>.from(rawList);
   }
 
+  // Generic method for API get
   static Future<dynamic> _genericGetWithAuth({
     required String? authToken,
     required String url,
@@ -61,6 +66,7 @@ class ApiAccess {
     return _processResponse(response, unknownExceptionMessage);
   }
 
+  // Generic method for API post
   static Future<dynamic> _genericPostWithAuth({
     required String? authToken,
     required String url,
@@ -119,22 +125,13 @@ class ApiAccess {
       body: json.encode({
         'username': username,
         'password': password,
-        'tipo': clientTypeApiMap[clientType],
+        'tipo': _clientTypeApiMap[clientType],
       }),
     );
 
     return _processResponse(response, 'Failed to register');
   }
 
-  static Future<Map<String, dynamic>> getCalendarData(String? authToken) async {
-    return await _genericGetWithAuth(
-      authToken: authToken,
-      url: AppApiRoutes.calendarData,
-      unknownExceptionMessage: 'Failed to fetch calendar data',
-    );
-  }
-
-  // funciona
   static Future<List<Map<String, dynamic>>> getWeightData(
       String? authToken) async {
     return _processRawList(
@@ -146,7 +143,6 @@ class ApiAccess {
     );
   }
 
-  // funciona
   static Future<Map<String, dynamic>> postWeightData(
     String? authToken,
     double weight,
@@ -165,7 +161,7 @@ class ApiAccess {
     );
   }
 
-  // funciona
+  // TODO: pode ser necessário usar _processRawList, assim como getWeightData
   static Future<Map<String, dynamic>> getMealData(String? authToken) async {
     return await _genericGetWithAuth(
       authToken: authToken,
@@ -174,7 +170,6 @@ class ApiAccess {
     );
   }
 
-  // funciona
   static Future<Map<String, dynamic>> postMealData(
     String? authToken,
     String description,
@@ -194,7 +189,7 @@ class ApiAccess {
     );
   }
 
-  // funciona
+  // TODO: pode ser necessário usar _processRawList, assim como getWeightData
   static Future<Map<String, dynamic>> getExerciseData(String? authToken) async {
     return await _genericGetWithAuth(
       authToken: authToken,
@@ -203,7 +198,6 @@ class ApiAccess {
     );
   }
 
-  // funciona
   static Future<Map<String, dynamic>> postExerciseData(
     String? authToken,
     String trainer,
@@ -224,7 +218,6 @@ class ApiAccess {
     );
   }
 
-  // funciona
   static Future<List<Map<String, dynamic>>> getAnamnesisData(
       String? authToken) async {
     return _processRawList(
@@ -236,7 +229,6 @@ class ApiAccess {
     );
   }
 
-  // funciona
   static Future<Map<String, dynamic>> postAnamnesisData(
     String? authToken,
     int age,
@@ -261,7 +253,7 @@ class ApiAccess {
     );
   }
 
-  // funciona
+  // TODO: pode ser necessário usar _processRawList, assim como getWeightData
   static Future<Map<String, dynamic>> getFoodMenudata(String? authToken) async {
     return await _genericGetWithAuth(
       authToken: authToken,
@@ -270,7 +262,6 @@ class ApiAccess {
     );
   }
 
-  // funciona
   static Future<Map<String, dynamic>> postFoodMenuData(
     String? authToken,
     String user,
@@ -293,7 +284,6 @@ class ApiAccess {
     );
   }
 
-  // funciona
   static Future<List<Map<String, dynamic>>> getRelationshipData(
       String? authToken) async {
     return _processRawList(
@@ -305,7 +295,6 @@ class ApiAccess {
     );
   }
 
-  // funciona
   static Future<Map<String, dynamic>> postRelationshipData(
     String? authToken,
     String user,
@@ -322,7 +311,7 @@ class ApiAccess {
     );
   }
 
-  // funciona
+  // TODO: pode ser necessário usar _processRawList, assim como getWeightData
   static Future<Map<String, dynamic>> getWorkoutSheetData(
       String? authToken) async {
     return await _genericGetWithAuth(
@@ -332,7 +321,6 @@ class ApiAccess {
     );
   }
 
-  // funciona
   static Future<Map<String, dynamic>> postWorkoutSheetData(
     String? authToken,
     String user,

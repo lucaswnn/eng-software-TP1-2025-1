@@ -2,6 +2,7 @@ import 'package:diary_fit/screens/home_screen_content_interface.dart';
 import 'package:diary_fit/tads/client.dart';
 import 'package:flutter/material.dart';
 
+// TODO: modificar de forma parecida com HomeScreenNutritionist
 class HomeScreenTrainer extends HomeScreenContentInterface {
   const HomeScreenTrainer({super.key});
 

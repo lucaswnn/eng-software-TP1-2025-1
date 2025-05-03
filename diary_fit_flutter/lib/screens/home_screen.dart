@@ -9,9 +9,12 @@ import 'package:diary_fit/utils/widgets/invalid_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// Main class for home UI
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  // This method is called only if professionals are logged in
+  // Returns the clients options
   List<DropdownMenuEntry<String>> _clientEntriesBuilder(
       ClientProfessional professional) {
     final clients = professional.clients?.keys.toList() ?? [];
@@ -23,6 +26,8 @@ class HomeScreen extends StatelessWidget {
         .toList();
   }
 
+  // Builds the DropDownMenu
+  // The widget is wrapped in a list to directly return to the appBar actions
   List<DropdownMenu<String>>? _dropDownBuilder(
     DataProvider dataState,
     ClientProfessional professional,

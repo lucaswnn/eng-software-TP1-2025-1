@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:diary_fit/values/app_strings.dart';
 
-
+// Useful widget for debugging
 class InvalidRoute extends StatelessWidget {
   const InvalidRoute({super.key});
 

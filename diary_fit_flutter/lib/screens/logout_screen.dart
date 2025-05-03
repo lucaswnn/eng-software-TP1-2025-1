@@ -6,6 +6,7 @@ import 'package:diary_fit/values/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// Logout UI
 class LogoutScreen extends StatelessWidget {
   const LogoutScreen({super.key});
 
@@ -23,11 +24,13 @@ class LogoutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
+                  // TODO: colocar string no AppStrings
                   'Fazer logout',
                   style: TextStyle(fontSize: 20),
                 ),
                 const SizedBox(height: 50),
                 const Text(
+                  // TODO: colocar string no AppStrings
                   'Deseja mesmo sair do app?',
                   style: TextStyle(fontSize: 14),
                 ),
@@ -37,14 +40,17 @@ class LogoutScreen extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () => NavigationHelper.pop(),
+                      // TODO: colocar string no AppStrings
                       child: Text('Cancelar'),
                     ),
                     ElevatedButton(
                       onPressed: () {
+                        // Clear the user data
                         context.read<AuthProvider>().logout();
                         context.read<DataProvider>().cleanData();
                         NavigationHelper.pushReplacementNamed(AppRoutes.login);
                       },
+                      // TODO: colocar string no AppStrings
                       child: Text('Logout'),
                     ),
                   ],
