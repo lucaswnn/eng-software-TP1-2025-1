@@ -39,17 +39,24 @@ class ClientNutritionist extends ClientProfessional {
 
 class ClientPatient extends Client {
   List<WeightData>? weightData;
+  List<MealData>? mealData;
+  List<ExerciseData>? exerciseData;
+  List<FoodMenuData>? foodMenuData;
+  List<WorkoutSheetData>? workoutSheetData;
   Anamnesis? anamnesis;
   String? nutritionist;
   String? trainer;
 
-  // TODO: criar novas listas para foodMenuData, workoutSheetData, mealData e exerciseData
 
   ClientPatient({
     required super.username,
     this.nutritionist,
     this.trainer,
     this.weightData,
+    this.mealData,
+    this.exerciseData,
+    this.foodMenuData,
+    this.workoutSheetData,
     this.anamnesis,
   });
 }

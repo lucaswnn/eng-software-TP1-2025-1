@@ -8,7 +8,7 @@ import 'package:diary_fit/values/app_strings.dart';
 
 // Class responsible for patient UI homepage
 class HomeScreenPatient extends HomeScreenContentInterface {
-  HomeScreenPatient({super.key});
+  const HomeScreenPatient({super.key});
 
   @override
   ClientType get clientType => ClientType.patient;
@@ -38,43 +38,8 @@ class HomeScreenPatient extends HomeScreenContentInterface {
   // current selected NavigationRail destination
 
   final _calendarPage = const PatientCalendar();
-
-  final _userPage = Expanded(
-    child: ListView(
-      padding: const EdgeInsets.all(8.0),
-      children: [
-        ListTile(
-          leading: const Icon(Icons.list),
-          // TODO: colocar strings no AppStrings
-          title: const Text('Ficha anamnese'),
-          subtitle: const Text('Dados para consulta de especialistas'),
-          onTap: () => NavigationHelper.pushNamed(AppRoutes.anamnesis),
-        ),
-        ListTile(
-          leading: const Icon(Icons.people),
-          // TODO: colocar strings no AppStrings
-          title: const Text('Profissionais'),
-          subtitle: const Text('Treinadores e nutricionistas associados'),
-          onTap: () =>
-              NavigationHelper.pushNamed(AppRoutes.associatedProfessionals),
-        ),
-      ],
-    ),
-  );
-
-  final _settingsPage = Expanded(
-    child: ListView(
-      padding: const EdgeInsets.all(8.0),
-      children: [
-        ListTile(
-          leading: const Icon(Icons.power_settings_new),
-          // TODO: colocar string no AppStrings
-          title: const Text('Fazer logout'),
-          onTap: () => NavigationHelper.pushNamed(AppRoutes.logout),
-        )
-      ],
-    ),
-  );
+  final _userPage = const _UserPage();
+  final _settingsPage = const _SettingsPage();
 
   @override
   Map<NavigationRailDestination, Widget> get contents => {
@@ -82,4 +47,55 @@ class HomeScreenPatient extends HomeScreenContentInterface {
         _userDestination: _userPage,
         _settingsDestination: _settingsPage,
       };
+}
+
+class _UserPage extends StatelessWidget {
+  const _UserPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView(
+        padding: const EdgeInsets.all(8.0),
+        children: [
+          ListTile(
+            leading: const Icon(Icons.list),
+            // TODO: colocar strings no AppStrings
+            title: const Text('Ficha anamnese'),
+            subtitle: const Text('Dados para consulta de especialistas'),
+            onTap: () => NavigationHelper.pushNamed(AppRoutes.anamnesis),
+          ),
+          ListTile(
+            leading: const Icon(Icons.people),
+            // TODO: colocar strings no AppStrings
+            title: const Text('Profissionais'),
+            subtitle: const Text('Treinadores e nutricionistas associados'),
+            onTap: () =>
+                NavigationHelper.pushNamed(AppRoutes.associatedProfessionals),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SettingsPage extends StatelessWidget {
+  const _SettingsPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView(
+        padding: const EdgeInsets.all(8.0),
+        children: [
+          ListTile(
+            leading: const Icon(Icons.power_settings_new),
+            // TODO: colocar string no AppStrings
+            title: const Text('Fazer logout'),
+            onTap: () => NavigationHelper.pushNamed(AppRoutes.logout),
+          )
+        ],
+      ),
+    );
+  }
 }

@@ -149,7 +149,11 @@ class _AnamnesisFormState extends State<_AnamnesisForm> {
                           if (_formKey.currentState!.validate()) {
                             dataState.sendAnamnesis(
                               authState.clientAuth!,
-                              dataState.client as ClientPatient,
+                              int.parse(_ageController.text),
+                              double.parse(_heightController.text),
+                              double.parse(_weightController.text),
+                              _allergiesController.text,
+                              _goalController.text,
                             );
 
                             final errorMessage = dataState.errorMessage;

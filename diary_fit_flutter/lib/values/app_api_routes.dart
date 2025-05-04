@@ -26,7 +26,27 @@ class AppApiRoutes {
   static const String backendRefreshTokenLabel = 'refresh';
   static const String backendUserTypeLabel = 'tipo';
 
-  // TODO: colocar os labels dos serializers do cardápio, ficha, refeição e exercício
+  // Backend exercise labels
+  static const String backendExerciseUsernameLabel = 'usuario_username';
+  static const String backendExerciseDescriptionLabel = 'descricao';
+  static const String backendExerciseDateLabel = 'data';
+
+  // Backend meal labels
+  static const String backendMealUsernameLabel = 'usuario_username';
+  static const String backendMealDescriptionLabel = 'descricao';
+  static const String backendMealDateLabel = 'data';
+
+  // Backend food menu labels
+  static const String backendFoodMenuUsernameLabel = 'paciente_username';
+  static const String backendFoodMenuDescriptionLabel = 'descricao';
+  static const String backendFoodMenuStartLabel = 'data_inicio';
+  static const String backendFoodMenuEndLabel = 'data_fim';
+
+  // Backend workout sheet labels
+  static const String backendWorkoutSheetUsernameLabel = 'usuario_username';
+  static const String backendWorkoutSheetDescriptionLabel = 'descricao';
+  static const String backendWorkoutSheetStartLabel = 'data_inicio';
+  static const String backendWorkoutSheetEndLabel = 'data_fim';
 
   // Backend weight serializer labels
   static const String backendWeightUsernameLabel = 'usuario_username';

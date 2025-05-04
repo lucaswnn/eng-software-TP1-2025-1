@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'package:diary_fit/services/data_provider.dart';
 import 'package:diary_fit/tads/calendar_event.dart';
+import 'package:diary_fit/utils/date_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ abstract class CalendarInterface extends StatefulWidget {
   List<Widget> actionsBuilder(
     BuildContext context,
     DateTime date,
-    void Function(LinkedHashMap<DateTime, List<CalendarEvent>>) stateSetter,
+    void Function() stateSetter,
   );
 
   @override
@@ -46,8 +47,6 @@ class _CalendarInterfaceState extends State<CalendarInterface> {
     super.initState();
     _selectedEvents = ValueNotifier([]);
     _selectedEvent = ValueNotifier(const CalendarNullEvent());
-
-    _events = context.read<DataProvider>().calendarData;
   }
 
   @override
@@ -63,7 +62,7 @@ class _CalendarInterfaceState extends State<CalendarInterface> {
 
   List<CalendarEvent> _getEventsForRange(DateTime start, DateTime end) {
     // Implementation example
-    final days = _daysInRange(start, end);
+    final days = DateFunctions.daysInRange(start, end);
 
     return [
       for (final d in days) ..._getEventsForDay(d),
@@ -118,15 +117,16 @@ class _CalendarInterfaceState extends State<CalendarInterface> {
     _selectedEvent.value = event;
   }
 
-  void _setEvents(LinkedHashMap<DateTime, List<CalendarEvent>> events) {
-    setState(() => _events = events);
-    _rangeSelectionMode == RangeSelectionMode.toggledOff
-        ? _selectedEvents.value = _getEventsForDay(_selectedDay!)
-        : _selectedEvents.value = _getEventsForRange(_rangeStart!, _rangeEnd!);
+  void _onActionPressed() {
+    _selectedEvents.value = _getEventsForDay(_selectedDay!);
   }
 
   @override
   Widget build(BuildContext context) {
+    final dataState = context.watch<DataProvider>();
+    _events = dataState.calendarData;
+    print('aqui');
+
     return Flexible(
       child: Row(
         children: [
@@ -194,9 +194,9 @@ class _CalendarInterfaceState extends State<CalendarInterface> {
                 _selectedDay != null
                     ? ListView(
                         shrinkWrap: true,
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(15.0),
                         children: widget.actionsBuilder(
-                            context, _selectedDay!, _setEvents),
+                            context, _selectedDay!, _onActionPressed),
                       )
                     : const SizedBox()
               ],
@@ -206,12 +206,4 @@ class _CalendarInterfaceState extends State<CalendarInterface> {
       ),
     );
   }
-}
-
-List<DateTime> _daysInRange(DateTime first, DateTime last) {
-  final dayCount = last.difference(first).inDays + 1;
-  return List.generate(
-    dayCount,
-    (index) => DateTime.utc(first.year, first.month, first.day + index),
-  );
 }

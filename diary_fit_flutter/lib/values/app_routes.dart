@@ -9,4 +9,7 @@ class AppRoutes {
   static const String anamnesis = '/home/anamnese';
   static const String associatedProfessionals = '/home/profissionais';
   static const String logout = '/home/logout/';
+  static const String clientList = '/home/clientes';
+  static const String addClient = '/home/adicionar_cliente';
+  static const String addFoodMenu = '/home/adicionar_cardapio';
 }

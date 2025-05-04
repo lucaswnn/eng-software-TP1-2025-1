@@ -161,12 +161,14 @@ class ApiAccess {
     );
   }
 
-  // TODO: pode ser necessário usar _processRawList, assim como getWeightData
-  static Future<Map<String, dynamic>> getMealData(String? authToken) async {
-    return await _genericGetWithAuth(
-      authToken: authToken,
-      url: AppApiRoutes.mealData,
-      unknownExceptionMessage: 'Failed to fetch meal data',
+  static Future<List<Map<String, dynamic>>> getMealData(
+      String? authToken) async {
+    return _processRawList(
+      await _genericGetWithAuth(
+        authToken: authToken,
+        url: AppApiRoutes.mealData,
+        unknownExceptionMessage: 'Failed to fetch meal data',
+      ),
     );
   }
 
@@ -176,9 +178,8 @@ class ApiAccess {
     DateTime date,
   ) async {
     final body = {
-      'descricao': 'xtudo',
+      'descricao': description,
       'data': _dateTimeStringFormat(date),
-      'nutricionista_username': 'n1',
     };
 
     return await _genericPostWithAuth(
@@ -189,24 +190,24 @@ class ApiAccess {
     );
   }
 
-  // TODO: pode ser necessário usar _processRawList, assim como getWeightData
-  static Future<Map<String, dynamic>> getExerciseData(String? authToken) async {
-    return await _genericGetWithAuth(
-      authToken: authToken,
-      url: AppApiRoutes.exerciseData,
-      unknownExceptionMessage: 'Failed to fetch exercise data',
+  static Future<List<Map<String, dynamic>>> getExerciseData(
+      String? authToken) async {
+    return _processRawList(
+      await _genericGetWithAuth(
+        authToken: authToken,
+        url: AppApiRoutes.exerciseData,
+        unknownExceptionMessage: 'Failed to fetch exercise data',
+      ),
     );
   }
 
   static Future<Map<String, dynamic>> postExerciseData(
     String? authToken,
-    String trainer,
     String description,
     DateTime date,
   ) async {
     final body = {
       'data': _dateTimeStringFormat(date),
-      'treinador_username': trainer,
       'descricao': description,
     };
 
@@ -253,12 +254,14 @@ class ApiAccess {
     );
   }
 
-  // TODO: pode ser necessário usar _processRawList, assim como getWeightData
-  static Future<Map<String, dynamic>> getFoodMenudata(String? authToken) async {
-    return await _genericGetWithAuth(
-      authToken: authToken,
-      url: AppApiRoutes.foodMenuData,
-      unknownExceptionMessage: 'Failed to fetch food menu data',
+  static Future<List<Map<String, dynamic>>> getFoodMenudata(
+      String? authToken) async {
+    return _processRawList(
+      await _genericGetWithAuth(
+        authToken: authToken,
+        url: AppApiRoutes.foodMenuData,
+        unknownExceptionMessage: 'Failed to fetch food menu data',
+      ),
     );
   }
 
@@ -270,7 +273,7 @@ class ApiAccess {
     DateTime end,
   ) async {
     final body = {
-      'paciente_username': user,
+      'paciente_username_input': user,
       'description': description,
       'data_inicio': _dateTimeStringFormat(start),
       'data_fim': _dateTimeStringFormat(end),
@@ -311,13 +314,15 @@ class ApiAccess {
     );
   }
 
-  // TODO: pode ser necessário usar _processRawList, assim como getWeightData
-  static Future<Map<String, dynamic>> getWorkoutSheetData(
-      String? authToken) async {
-    return await _genericGetWithAuth(
-      authToken: authToken,
-      url: AppApiRoutes.workoutSheetData,
-      unknownExceptionMessage: 'Failed to fetch workout sheet data',
+  static Future<List<Map<String, dynamic>>> getWorkoutSheetData(
+    String? authToken,
+  ) async {
+    return _processRawList(
+      await _genericGetWithAuth(
+        authToken: authToken,
+        url: AppApiRoutes.workoutSheetData,
+        unknownExceptionMessage: 'Failed to fetch workout sheet data',
+      ),
     );
   }
 
@@ -329,7 +334,7 @@ class ApiAccess {
     DateTime end,
   ) async {
     final body = {
-      'usuario_username': user,
+      'usuario_username_input': user,
       'descricao': description,
       'data_inicio': _dateTimeStringFormat(start),
       'data_fim': _dateTimeStringFormat(end),

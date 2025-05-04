@@ -29,6 +29,7 @@ class HomeScreen extends StatelessWidget {
   // Builds the DropDownMenu
   // The widget is wrapped in a list to directly return to the appBar actions
   List<DropdownMenu<String>>? _dropDownBuilder(
+    AuthProvider authState,
     DataProvider dataState,
     ClientProfessional professional,
   ) {
@@ -49,7 +50,8 @@ class HomeScreen extends StatelessWidget {
           initialSelection: dataState.currentPatient!.username,
           dropdownMenuEntries: _clientEntriesBuilder(professional),
           onSelected: (val) {
-            dataState.currentPatient = professional.clients![val];
+            dataState.switchCurrentPatient(
+                authState.clientAuth!, professional.clients![val]);
           },
         )
       ];
@@ -74,13 +76,13 @@ class HomeScreen extends StatelessWidget {
     HomeScreenContentInterface body;
     switch (authType) {
       case ClientType.trainer:
-        body = HomeScreenTrainer();
+        body = const HomeScreenTrainer();
         break;
       case ClientType.nutritionist:
-        body = HomeScreenNutritionist();
+        body = const HomeScreenNutritionist();
         break;
       case ClientType.patient:
-        body = HomeScreenPatient();
+        body = const HomeScreenPatient();
         break;
     }
 
@@ -96,6 +98,7 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: authType != ClientType.patient
             ? _dropDownBuilder(
+                authState,
                 dataState,
                 professional as ClientProfessional,
               )

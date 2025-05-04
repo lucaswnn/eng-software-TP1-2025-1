@@ -20,15 +20,24 @@ class ApiParser {
         clientType: _parseClientType(clientType));
   }
 
-  static List<WeightData> parseWeight(
+  static Map<String, List<WeightData>> parseWeight(
     List<Map<String, dynamic>> jsonDataList,
   ) {
-    return [
-      for (final v in jsonDataList)
-        WeightData(
-            weight: double.parse(v[AppApiRoutes.backendWeightValueLabel]),
-            date: DateTime.parse(v[AppApiRoutes.backendWeightDateLabel]))
-    ];
+    final Map<String, List<WeightData>> map = {};
+    for (final v in jsonDataList) {
+      final key = v[AppApiRoutes.backendWeightUsernameLabel];
+
+      final weight = WeightData(
+          weight: double.parse(v[AppApiRoutes.backendWeightValueLabel]),
+          date: DateTime.parse(v[AppApiRoutes.backendWeightDateLabel]));
+
+      if (map.containsKey(key)) {
+        map[key]!.add(weight);
+      } else {
+        map[key] = [weight];
+      }
+    }
+    return map;
   }
 
   static Map<String, Anamnesis>? parseAnamnesis(
@@ -98,7 +107,101 @@ class ApiParser {
     }
   }
 
-  // TODO: implementar parsers para cardápio, ficha, refeições e exercícios
+  static Map<String, List<FoodMenuData>> parseFoodMenu(
+    List<Map<String, dynamic>> jsonDataList,
+  ) {
+    final Map<String, List<FoodMenuData>> map = {};
+
+    for (final v in jsonDataList) {
+      final key = v[AppApiRoutes.backendFoodMenuUsernameLabel];
+
+      final food = FoodMenuData(
+        description: v[AppApiRoutes.backendFoodMenuDescriptionLabel],
+        start: DateTime.parse(v[AppApiRoutes.backendFoodMenuStartLabel]),
+        end: DateTime.parse(
+          v[AppApiRoutes.backendFoodMenuEndLabel],
+        ),
+      );
+
+      if (map.containsKey(key)) {
+        map[key]!.add(food);
+      } else {
+        map[key] = [food];
+      }
+
+    }
+
+    return map;
+  }
+
+  static Map<String, List<WorkoutSheetData>> parseWorkoutSheet(
+    List<Map<String, dynamic>> jsonDataList,
+  ) {
+    final Map<String, List<WorkoutSheetData>> map = {};
+    for (final v in jsonDataList) {
+      final key = v[AppApiRoutes.backendWorkoutSheetUsernameLabel];
+
+      final workoutSheet = WorkoutSheetData(
+        description: v[AppApiRoutes.backendWorkoutSheetDescriptionLabel],
+        start: DateTime.parse(v[AppApiRoutes.backendWorkoutSheetStartLabel]),
+        end: DateTime.parse(
+          v[AppApiRoutes.backendWorkoutSheetEndLabel],
+        ),
+      );
+
+      if (map.containsKey(key)) {
+        map[key]!.add(workoutSheet);
+      } else {
+        map[key] = [workoutSheet];
+      }
+    }
+
+    return map;
+  }
+
+  static Map<String, List<MealData>> parseMeal(
+    List<Map<String, dynamic>> jsonDataList,
+  ) {
+    final Map<String, List<MealData>> map = {};
+    for (final v in jsonDataList) {
+      final key = v[AppApiRoutes.backendMealUsernameLabel];
+
+      final meal = MealData(
+        description: v[AppApiRoutes.backendMealDescriptionLabel],
+        date: DateTime.parse(v[AppApiRoutes.backendMealDateLabel]),
+      );
+
+      if (map.containsKey(key)) {
+        map[key]!.add(meal);
+      } else {
+        map[key] = [meal];
+      }
+    }
+
+    return map;
+  }
+
+  static Map<String, List<ExerciseData>> parseExercise(
+    List<Map<String, dynamic>> jsonDataList,
+  ) {
+    final Map<String, List<ExerciseData>> map = {};
+    for (final v in jsonDataList) {
+      final key = v[AppApiRoutes.backendExerciseUsernameLabel];
+
+      final exercise = ExerciseData(
+        description: v[AppApiRoutes.backendExerciseDescriptionLabel],
+        date: DateTime.parse(v[AppApiRoutes.backendExerciseDateLabel]),
+      );
+
+      if (map.containsKey(key)) {
+        map[key]!.add(exercise);
+      } else {
+        map[key] = [exercise];
+      }
+    }
+
+    return map;
+  }
 }
 
 class ClientAuth {

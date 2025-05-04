@@ -1,3 +1,6 @@
+import 'package:diary_fit/screens/add_client_screen.dart';
+import 'package:diary_fit/screens/client_list_screen.dart';
+import 'package:diary_fit/screens/home_screen_nutritionist/add_food_menu_screen.dart';
 import 'package:diary_fit/screens/home_screen_patient/anamnesis_patient_screen.dart';
 import 'package:diary_fit/screens/home_screen_patient/associated_professionals_screen.dart';
 import 'package:diary_fit/screens/logout_screen.dart';
@@ -42,6 +45,15 @@ class Routes {
 
       case AppRoutes.logout:
         return getRoute(widget: const LogoutScreen());
+      
+      case AppRoutes.addClient:
+        return getRoute(widget: const AddClientScreen());
+      
+      case AppRoutes.addFoodMenu:
+        return getRoute(widget: const AddFoodMenuScreen());
+      
+      case AppRoutes.clientList:
+        return getRoute(widget: const ClientListScreen());
 
       // TODO: implementar roteadores para as rotas da lista de clientes e 
       // dados gerais do cliente atual

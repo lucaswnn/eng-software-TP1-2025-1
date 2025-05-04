@@ -1,19 +1,13 @@
 import 'package:diary_fit/screens/calendar_interface.dart';
-import 'package:diary_fit/services/auth_provider.dart';
-import 'package:diary_fit/services/data_provider.dart';
 import 'package:diary_fit/tads/calendar_event.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-// Class responsible for patient UI calendar
+// Class responsible for nutritionist UI calendar
 // It implements the required CalendarInterface methods
 // The abstract class CalendarInterface is the main calendar builder
 
-// TODO: implementar o calendário do nutricionista e do personal
-// No caso do nutricionista, adicionar action para criar cardário
-// No caso do personal, adicionar action para criar ficha
-class PatientCalendar extends CalendarInterface {
-  const PatientCalendar({super.key});
+class NutritionistCalendar extends CalendarInterface {
+  const NutritionistCalendar({super.key});
 
   // This method is responsible for adding action buttons at the right side of the
   // calendar UI
@@ -23,63 +17,7 @@ class PatientCalendar extends CalendarInterface {
     DateTime date,
     void Function() stateSetter,
   ) {
-    final dataState = context.watch<DataProvider>();
-    final authState = context.read<AuthProvider>();
-    final auth = authState.clientAuth;
-
-    Future<void> sendWeight(String weight) async {
-      dataState.sendWeight(auth!, double.parse(weight), date);
-      stateSetter();
-    }
-
-    Future<void> sendMeal(String meal) async {
-      dataState.sendMeal(auth!, meal, date);
-      stateSetter();
-    }
-
-    Future<void> sendExercise(String exercise) async {
-      dataState.sendExercise(auth!, exercise, date);
-      stateSetter();
-    }
-
-    // TODO: implementar botões de adicionar refeição feita e de exercício feito
-    return [
-      _ListTileAdder(
-        inputLabel: 'Adicionar peso',
-        validator: (value) {
-          if (value == null) {
-            return 'Insira um valor';
-          }
-          if (double.tryParse(value) == null) {
-            return 'Insira um valor válido';
-          }
-          return null;
-        },
-        future: sendWeight,
-      ),
-      _ListTileAdder(
-        inputLabel: 'Adicionar refeição',
-        validator: (value) {
-          if (value == null) {
-            return 'Insira um valor';
-          }
-
-          return null;
-        },
-        future: sendMeal,
-      ),
-      _ListTileAdder(
-        inputLabel: 'Adicionar exercício',
-        validator: (value) {
-          if (value == null) {
-            return 'Insira um valor';
-          }
-
-          return null;
-        },
-        future: sendExercise,
-      ),
-    ];
+    return [];
   }
 
   // This method is responsible for building the ListTile components under the

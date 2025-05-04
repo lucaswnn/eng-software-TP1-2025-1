@@ -8,9 +8,6 @@ enum CalendarEventType {
   weightRegister
 }
 
-// TODO: implementar mais as seguintes superclasses:
-// refeição, exercício, ficha e cardápio
-
 // Base class for Calendar events
 abstract class CalendarEvent {
   final CalendarEventType? type;
@@ -37,5 +34,53 @@ class CalendarWeightEvent extends CalendarEvent {
   @override
   Widget buildContent(BuildContext context) {
     return Center(child: Text('peso: $weight'));
+  }
+}
+
+class CalendarMealEvent extends CalendarEvent {
+  final String description;
+
+  CalendarMealEvent({required this.description}) : super(type: CalendarEventType.mealRegister);
+
+  // TODO: melhorar o buildContent
+  @override
+  Widget buildContent(BuildContext context) {
+    return Center(child: Text('refeição: $description'));
+  }
+}
+
+class CalendarExerciseEvent extends CalendarEvent {
+  final String description;
+
+  CalendarExerciseEvent({required this.description}) : super(type: CalendarEventType.exerciseRegister);
+
+  // TODO: melhorar o buildContent
+  @override
+  Widget buildContent(BuildContext context) {
+    return Center(child: Text('exercício: $description'));
+  }
+}
+
+class CalendarFoodMenuEvent extends CalendarEvent {
+  final String description;
+
+  CalendarFoodMenuEvent({required this.description}) : super(type: CalendarEventType.foodMenu);
+
+  // TODO: melhorar o buildContent
+  @override
+  Widget buildContent(BuildContext context) {
+    return Center(child: Text('cardápio: $description'));
+  }
+}
+
+class CalendarWorkoutSheetEvent extends CalendarEvent {
+  final String description;
+
+  CalendarWorkoutSheetEvent({required this.description}) : super(type: CalendarEventType.workoutSheet);
+
+  // TODO: melhorar o buildContent
+  @override
+  Widget buildContent(BuildContext context) {
+    return Center(child: Text('ficha de exercícios: $description'));
   }
 }

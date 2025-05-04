@@ -14,6 +14,9 @@ class Anamnesis {
     required this.goal,
   });
 
+  @override
+  String toString() => goal;
+
   Map<String, dynamic> get anamnesisDataMap => {
         'Idade': age,
         'Altura': height,
@@ -21,7 +24,4 @@ class Anamnesis {
         'Alergias': allergies,
         'Objetivo': goal,
       };
-
-  @override
-  String toString() => '$anamnesisDataMap';
 }
