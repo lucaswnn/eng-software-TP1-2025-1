@@ -28,16 +28,12 @@ class PesoSerializer(serializers.ModelSerializer):
         fields = ['usuario_username', 'data', 'peso']
 
 class RefeicaoSerializer(serializers.ModelSerializer):
-    # mostra o nome de usuário do cliente
     usuario_username = serializers.CharField(source='usuario.username', read_only=True)
-    
-    nutricionista_username = serializers.CharField(write_only=True)
 
     class Meta:
         model = Refeicao
         fields = [
-            'usuario_username',    # username do usuário que fez
-            'nutricionista_username',  # username do nutricionista
+            'usuario_username',
             'data',
             'descricao',
         ]
@@ -45,37 +41,30 @@ class RefeicaoSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context['request'].user
 
-        nutricionista_username = validated_data.pop('nutricionista_username')
+        # busca vínculo
         try:
-            nutricionista = User.objects.get(username=nutricionista_username)
-        except User.DoesNotExist:
-            raise NotFound('Nutricionista não encontrado.')
-        
-        if not VinculoProfissionalPaciente.objects.filter(paciente=user, profissional=nutricionista, profissional__perfil__tipo='nutricionista').exists():
-            raise PermissionDenied(f'Paciente {user.username} não está associado ao nutricionista {nutricionista.username}.')
+            if user.perfil.tipo == 'nutricionista':
+                vinculo = VinculoProfissionalPaciente.objects.get(
+                    paciente=user,
+                    profissional__perfil__tipo='nutricionista'
+                )
+        except VinculoProfissionalPaciente.DoesNotExist:
+            raise PermissionDenied(f'Paciente {user.username} não está associado a nenhum nutricionista.')
 
-        validated_data.pop('usuario', None)
         validated_data.pop('nutricionista', None)
-
+        validated_data.pop('usuario', None)
         return Refeicao.objects.create(
             usuario=user,
-            nutricionista=nutricionista,
             **validated_data
         )
 
 class ExercicioSerializer(serializers.ModelSerializer):
-    # mostra o nome de usuário do cliente
-    usuario_username = serializers.CharField(
-        source='usuario.username', read_only=True
-    )
-    # mostra o nome de usuário do treinador (se houver)
-    treinador_username = serializers.CharField(write_only=True)
+    usuario_username = serializers.CharField(source='usuario.username', read_only=True)
 
     class Meta:
         model = Exercicio
         fields = [
-            'usuario_username',    # username do usuário que fez
-            'treinador_username',  # username do treinador
+            'usuario_username',
             'data',
             'descricao',
         ]
@@ -83,15 +72,17 @@ class ExercicioSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context['request'].user
 
-        treinador_username = validated_data.pop('treinador_username')
+        # busca vínculo
         try:
-            treinador = User.objects.get(username=treinador_username)
-        except User.DoesNotExist:
-            raise NotFound('Treinador não encontrado.')
-        
-        if not VinculoProfissionalPaciente.objects.filter(paciente=user, profissional=treinador, profissional__perfil__tipo='educador_fisico').exists():
-            raise PermissionDenied(f'Paciente {user.username} não está associado ao treinador {treinador.username}.')
+            if user.perfil.tipo == 'educador_fisico':
+                vinculo = VinculoProfissionalPaciente.objects.get(
+                    paciente=user,
+                    profissional__perfil__tipo='educador_fisico'
+                )
+        except VinculoProfissionalPaciente.DoesNotExist:
+            raise PermissionDenied(f'Paciente {user.username} não está associado a nenhu educador físico.')
 
+        validated_data.pop('educador_fisico', None)
         validated_data.pop('usuario', None)
         return Exercicio.objects.create(
             usuario=user,
@@ -122,17 +113,20 @@ class AnamneseSerializer(serializers.ModelSerializer):
         fields = ['usuario_username', 'idade', 'altura_cm', 'peso_inicial', 'alergias', 'objetivo']
 
 class CardapioSerializer(serializers.ModelSerializer):
-    # restringe a escolha de paciente a usuários do tipo "paciente"
-    paciente_username = serializers.CharField(write_only=True)
+    paciente_username = serializers.SerializerMethodField()
+    paciente_username_input = serializers.CharField(write_only=True)
 
     class Meta:
         model = Cardapio
-        fields = ['paciente_username', 'data_inicio', 'data_fim', 'descricao']
+        fields = ['paciente_username', 'paciente_username_input', 'data_inicio', 'data_fim', 'descricao']
     
+    def get_paciente_username(self, obj):
+        return obj.paciente.username
+
     def create(self, validated_data):
         user = self.context['request'].user
 
-        paciente_username = validated_data.pop('paciente_username')
+        paciente_username = validated_data.pop('paciente_username_input')
         try:
             paciente = User.objects.get(username=paciente_username)
         except User.DoesNotExist:
@@ -144,7 +138,7 @@ class CardapioSerializer(serializers.ModelSerializer):
             ).exists():
             raise PermissionDenied(f'Paciente {paciente.username} não está associado ao nutricionista {user.username}.')
 
-        validated_data.pop('paciente')
+        validated_data.pop('paciente',None)
         return Cardapio.objects.create(
             paciente=paciente,
             **validated_data
@@ -205,17 +199,20 @@ class VinculoSerializer(serializers.ModelSerializer):
         )
 
 class FichaSerializer(serializers.ModelSerializer):
-    # restringe a escolha de paciente a usuários do tipo "paciente"
-    usuario_username = serializers.CharField(write_only=True)
+    usuario_username = serializers.SerializerMethodField()
+    usuario_username_write = serializers.CharField(write_only=True)
 
     class Meta:
         model = Ficha
-        fields = ['usuario_username', 'data_inicio', 'data_fim', 'descricao']
+        fields = ['usuario_username', 'usuario_username_write', 'data_inicio', 'data_fim', 'descricao']
     
+    def get_usuario_username(self, obj):
+        return obj.usuario.username
+
     def create(self, validated_data):
         user = self.context['request'].user
 
-        usuario_username = validated_data.pop('usuario_username')
+        usuario_username = validated_data.pop('usuario_username_write')
         try:
             usuario = User.objects.get(username=usuario_username)
         except User.DoesNotExist:
@@ -227,7 +224,6 @@ class FichaSerializer(serializers.ModelSerializer):
             ).exists():
             raise PermissionDenied(f'Usuário {usuario.username} não está associado ao treinador {user.username}.')
 
-        validated_data.pop('usuario')
         return Ficha.objects.create(
             usuario=usuario,
             **validated_data
