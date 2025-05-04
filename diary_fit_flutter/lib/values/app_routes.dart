@@ -12,4 +12,5 @@ class AppRoutes {
   static const String clientList = '/home/clientes';
   static const String addClient = '/home/adicionar_cliente';
   static const String addFoodMenu = '/home/adicionar_cardapio';
+  static const String addWorkoutSheet = '/addWorkoutSheet';
 }

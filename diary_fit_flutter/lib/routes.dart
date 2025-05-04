@@ -3,6 +3,7 @@ import 'package:diary_fit/screens/client_list_screen.dart';
 import 'package:diary_fit/screens/home_screen_nutritionist/add_food_menu_screen.dart';
 import 'package:diary_fit/screens/home_screen_patient/anamnesis_patient_screen.dart';
 import 'package:diary_fit/screens/home_screen_patient/associated_professionals_screen.dart';
+import 'package:diary_fit/screens/home_screen_trainer/add_workout_sheet_screen.dart';
 import 'package:diary_fit/screens/logout_screen.dart';
 import 'package:diary_fit/screens/register_screen.dart';
 import 'package:flutter/material.dart';
@@ -55,8 +56,8 @@ class Routes {
       case AppRoutes.clientList:
         return getRoute(widget: const ClientListScreen());
 
-      // TODO: implementar roteadores para as rotas da lista de clientes e 
-      // dados gerais do cliente atual
+      case AppRoutes.addWorkoutSheet: // Nova rota
+        return getRoute(widget: const AddWorkoutSheetScreen());
 
       default:
         return getRoute(widget: const InvalidRoute());
