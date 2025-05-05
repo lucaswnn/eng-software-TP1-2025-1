@@ -13,10 +13,24 @@ Membros da Equipe
 Haniel Botelho Ribeiro: Full Stack;
 Lucas Ferreria Pedras: Full Stack e Project Owner;
 Lucas Wiermann Cobo da Silva: Full Stack;
-Mateus Amaral da Silva: Full Stack.
+Mateus Amaral da Silva: Modelagem e implementação do BD, Criação do backlog de sprint, co-programing do front-end.
 
 Tecnologias Utilizadas
 - Frontend: Flutter;
 - Backend: Django;
 - Banco de Dados: Supabase (PostgreSQL);
 - Hospedagem: Firebase Hosting.
+
+Retrospectiva:
+Com o fim do projeto a equipe pontuou os pontos positivos e negativos observados no desenvolvimento do projeto:
+  Pontos positivos
+  . Conseguimos fazer grande parte do que queríamos, retirando apenas metas de alta complexidade.
+  . Conseguimos corrigir erros que atrapalhavam a aplicação
+  . Reformulamos algumas coisas do front-end para tornar o ambiente agradável para o cliente
+  . Implementamos funcionalidades a mais do que planejávamos no começo da Sprint
+  Pontos negativos
+  . Poderíamos ter comunicado mais sobre como iriamos fazer o projeto
+  . Poderíamos também comunicar melhor sobre como implementaríamos as nossas funcionalidades
+  . Algumas poucas funcionalidades que pensávamos em implementar no começo do projeto eram complexas de mais para a primeira Sprint e não tivemos essa percepção inicialmente
+Após essas observações conseguimos ver os pontos fortes e fracos da equipe e acreditamos que para uma primeira imersão em uma metodologia ágil nos saimos bem.
+
