@@ -33,9 +33,30 @@ class NutritionistCalendar extends CalendarInterface {
     void Function(CalendarEvent event) onEventSelected,
     List<CalendarEvent> events,
   ) {
+    final event = events[index];
+    IconData icon;
+    String subtitle;
+
+    // Customize the icon and subtitle based on the event type
+    switch (event.type) {
+      case CalendarEventType.foodMenu:
+        icon = Icons.restaurant_menu;
+        subtitle = 'Food Menu';
+        break;
+      case CalendarEventType.mealRegister:
+        icon = Icons.fastfood;
+        subtitle = 'Meal Log';
+        break;
+      default:
+        icon = Icons.event;
+        subtitle = 'Event';
+    }
+
     return ListTile(
-      onTap: () => onEventSelected(events[index]),
-      title: Text('${events[index]}'),
+      leading: Icon(icon),
+      title: Text(event.toString()),
+      subtitle: Text(subtitle),
+      onTap: () => onEventSelected(event),
     );
   }
 }

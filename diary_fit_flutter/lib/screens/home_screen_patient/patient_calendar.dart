@@ -95,9 +95,34 @@ class PatientCalendar extends CalendarInterface {
     void Function(CalendarEvent event) onEventSelected,
     List<CalendarEvent> events,
   ) {
+    final event = events[index];
+    IconData icon;
+    String subtitle;
+
+    // Customize the icon and subtitle based on the event type
+    switch (event.type) {
+      case CalendarEventType.weightRegister:
+        icon = Icons.monitor_weight;
+        subtitle = 'Weight Log';
+        break;
+      case CalendarEventType.mealRegister:
+        icon = Icons.fastfood;
+        subtitle = 'Meal Log';
+        break;
+      case CalendarEventType.exerciseRegister:
+        icon = Icons.directions_run;
+        subtitle = 'Exercise Log';
+        break;
+      default:
+        icon = Icons.event;
+        subtitle = 'Event';
+    }
+
     return ListTile(
-      onTap: () => onEventSelected(events[index]),
-      title: Text('${events[index]}'),
+      leading: Icon(icon),
+      title: Text(event.toString()),
+      subtitle: Text(subtitle),
+      onTap: () => onEventSelected(event),
     );
   }
 }

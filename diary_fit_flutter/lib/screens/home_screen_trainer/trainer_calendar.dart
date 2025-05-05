@@ -20,8 +20,8 @@ class TrainerCalendar extends CalendarInterface {
     return [
       ListTile(
         leading: const Icon(Icons.add),
-        title: const Text('Add Workout Sheet'),
-        subtitle: const Text('Create a workout Sheet for this date'),
+        title: const Text('Adicionar Ficha de Treino'),
+        subtitle: const Text('Crie uma ficha de treino para esta data'),
         onTap: () {
           // Implement the action for adding a workout Sheet
           // Example: Navigate to a workout Sheet creation screen

@@ -224,6 +224,7 @@ class FichaSerializer(serializers.ModelSerializer):
             ).exists():
             raise PermissionDenied(f'Usuário {usuario.username} não está associado ao treinador {user.username}.')
 
+        validated_data.pop('usuario', None)
         return Ficha.objects.create(
             usuario=usuario,
             **validated_data

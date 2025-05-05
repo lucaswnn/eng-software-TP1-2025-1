@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
     final clientAuth = authState.clientAuth!;
     final authType = clientAuth.clientType;
 
-    final dataState = context.read<DataProvider>();
+    final dataState = context.watch<DataProvider>();
     Client professional = dataState.client!;
 
     HomeScreenContentInterface body;

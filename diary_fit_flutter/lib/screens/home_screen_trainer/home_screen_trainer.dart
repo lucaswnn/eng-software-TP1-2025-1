@@ -54,20 +54,20 @@ class _TrainerOptions extends StatelessWidget {
         children: [
           ListTile(
             leading: const Icon(Icons.list),
-            title: const Text('My Clients'),
-            subtitle: const Text('List of registered clients'),
+            title: const Text('Meus Clientes'),
+            subtitle: const Text('Lista de clientes registrados'),
             onTap: () => NavigationHelper.pushNamed(AppRoutes.clientList),
           ),
           ListTile(
             leading: const Icon(Icons.add),
-            title: const Text('Add Client'),
-            subtitle: const Text('Add a new client to your list'),
+            title: const Text('Adicionar Cliente'),
+            subtitle: const Text('Adicione um novo cliente à sua lista'),
             onTap: () => NavigationHelper.pushNamed(AppRoutes.addClient),
           ),
           ListTile(
             leading: const Icon(Icons.assignment),
-            title: const Text('Add Workout Plan'),
-            subtitle: const Text('Add a workout plan for your current client'),
+            title: const Text('Adicionar Ficha de Treino'),
+            subtitle: const Text('Adicione uma ficha de treino para o cliente atual'),
             onTap: () => NavigationHelper.pushNamed(AppRoutes.addWorkoutSheet),
           ),
         ],

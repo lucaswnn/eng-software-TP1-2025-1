@@ -549,6 +549,8 @@ class DataProvider extends ChangeNotifier {
 
     try {
       await ApiAccess.postRelationshipData(clientAuth.accessToken, username);
+      await loadData(clientAuth);
+      processCalendarData(clientAuth);
     } catch (e) {
       _errorMessage = 'Não foi possível adicionar usuário: $e';
     }
@@ -559,6 +561,7 @@ class DataProvider extends ChangeNotifier {
 
   void cleanData() {
     _client = null;
+    _currentPatient = null;
     _calendarData = null;
     notifyListeners();
   }

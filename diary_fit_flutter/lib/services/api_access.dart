@@ -274,7 +274,7 @@ class ApiAccess {
   ) async {
     final body = {
       'paciente_username_input': user,
-      'description': description,
+      'descricao': description,
       'data_inicio': _dateTimeStringFormat(start),
       'data_fim': _dateTimeStringFormat(end),
     };
@@ -334,7 +334,7 @@ class ApiAccess {
     DateTime end,
   ) async {
     final body = {
-      'usuario_username_input': user,
+      'usuario_username_write': user,
       'descricao': description,
       'data_inicio': _dateTimeStringFormat(start),
       'data_fim': _dateTimeStringFormat(end),
