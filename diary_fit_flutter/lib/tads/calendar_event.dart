@@ -35,6 +35,10 @@ class CalendarWeightEvent extends CalendarEvent {
   Widget buildContent(BuildContext context) {
     return Center(child: Text('peso: $weight'));
   }
+  @override
+  String toString() {
+    return 'Peso do dia: $weight';
+  }
 }
 
 class CalendarMealEvent extends CalendarEvent {
@@ -46,6 +50,10 @@ class CalendarMealEvent extends CalendarEvent {
   @override
   Widget buildContent(BuildContext context) {
     return Center(child: Text('refeição: $description'));
+  }
+  @override
+  String toString() {
+    return 'Refeição do dia: $description';
   }
 }
 
@@ -59,6 +67,10 @@ class CalendarExerciseEvent extends CalendarEvent {
   Widget buildContent(BuildContext context) {
     return Center(child: Text('exercício: $description'));
   }
+  @override
+  String toString() {
+    return 'Exercicio do dia: $description';
+  }
 }
 
 class CalendarFoodMenuEvent extends CalendarEvent {
@@ -71,6 +83,10 @@ class CalendarFoodMenuEvent extends CalendarEvent {
   Widget buildContent(BuildContext context) {
     return Center(child: Text('cardápio: $description'));
   }
+  @override
+  String toString() {
+    return 'Cardápio do dia: $description';
+  }
 }
 
 class CalendarWorkoutSheetEvent extends CalendarEvent {
@@ -82,5 +98,9 @@ class CalendarWorkoutSheetEvent extends CalendarEvent {
   @override
   Widget buildContent(BuildContext context) {
     return Center(child: Text('ficha de exercícios: $description'));
+  }
+  @override
+  String toString() {
+    return 'Ficha de exercicio do dia: $description';
   }
 }

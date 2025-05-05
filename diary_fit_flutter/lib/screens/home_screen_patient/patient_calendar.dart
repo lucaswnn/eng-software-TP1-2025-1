@@ -47,7 +47,7 @@ class PatientCalendar extends CalendarInterface {
       _ListTileAdder(
         inputLabel: 'Adicionar peso',
         validator: (value) {
-          if (value == null) {
+          if (value == null || value == '') {
             return 'Insira um valor';
           }
           if (double.tryParse(value) == null) {
@@ -60,7 +60,7 @@ class PatientCalendar extends CalendarInterface {
       _ListTileAdder(
         inputLabel: 'Adicionar refeição',
         validator: (value) {
-          if (value == null) {
+          if (value == null || value == '') {
             return 'Insira um valor';
           }
 
@@ -71,7 +71,7 @@ class PatientCalendar extends CalendarInterface {
       _ListTileAdder(
         inputLabel: 'Adicionar exercício',
         validator: (value) {
-          if (value == null) {
+          if (value == null || value == '') {
             return 'Insira um valor';
           }
 
